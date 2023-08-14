@@ -687,8 +687,9 @@ shares data with the Verifiers that allow for a unique identification,
 e.g., a name and birth date, or a unique identifier, e.g., a social
 security number.
 
-> **Privacy Requirement W-70:** The Wallet must ensure that the Verifier
-> cannot learn that the same End-User is using other Verifiers.
+> **Privacy Requirement W-70:** The Wallet must ensure that the Verifier cannot
+> learn that the same End-User is using other Verifiers (unless desired by the
+> End-User).
 
 > **Privacy Requirement E-70:** The Trust Framework must support
 > correlation protection.
@@ -721,7 +722,7 @@ met.
 | E-20                 | Requirement on management of issuers                                                   |
 | E-30                 | Requirement on management of trust                                                     |
 | E-40                 | Requirement on management of trust                                                     |
-| E-50                 | Requirement on lifecycle management; also see (#note-on-storage-of-credentials) below. |
+| E-50                 | Requirement on lifecycle management; also see (#note-on-storage-of-credentials) above. |
 | E-60                 | Requirement on lifecycle management and key distribution                               |
 | E-70                 | Requirement on lifecycle management and key distribution                               |
 
@@ -882,7 +883,7 @@ Credentials can be released at one of three issuance endpoints:
 The deferred credential endpoint requires the use of an acceptance token
 as a bearer token. The acceptance token can be obtained only from the
 credential endpoint or batch credential endpoint. **TODO** Is the
-endpoint a protected resource? Can DPoP or MTLS be enforced?
+endpoint a protected resource? Can DPoP or MTLS be enforced? (see https://bitbucket.org/openid/connect/issues/1808/dpop-and-acceptance-tokens)
 
 **ATTACK**: An attacker can configure Mix-Up 1a. The attacker receives
 an acceptance token from the Wallet's request to the deferred credential
@@ -1054,7 +1055,7 @@ mapping between user sessions and the nonce that is expected in the
 flow. The Verifier should only accept a presentation if the nonce in the
 presentation matches the nonce that is expected for the user session.
 With this countermeasure, the Verifier can detect if a presentation is
-sent to it that was not intended for the user session or if no user
+sent that was not bound to the user's session or if no user
 session exists at all, preventing the attack.
 
 RECOMMENDATION: While this is expected from OAuth implementations, the
@@ -1155,10 +1156,10 @@ There are two options for the verification of the redirect URI:
 
 If the authorization code flow is used, it must be ensured that the
 token endpoint URL is authentic as well (i.e., belongs to the same
-Issuer).
+Verifier).
 
-**TODO** Check if the OID4VCI spec ensures authenticity of the token
-endpoint URL.
+**TODO** Is the above paragraph correct? Also check if the OID4VP spec ensures
+authenticity of the token endpoint URL.
 
 ## Security/Privacy Requirement P-70 {#security-privacy-requirement-p-70}
 
@@ -1441,22 +1442,25 @@ issuers in Self-Sovereign Identity ecosystems using TRAIN</title>
 
 <reference anchor="OpenID.Federation" target="https://openid.net/specs/openid-connect-federation-1_0.html">
         <front>
-          <title>OpenID Connect Federation 1.0 - draft 17></title>
-		  <author fullname="R. Hedberg, Ed.">
+          <title>OpenID Connect Federation 1.0 - draft 29></title>
+		      <author fullname="R. Hedberg, Ed.">
             <organization>Independent</organization>
           </author>
           <author fullname="Michael B. Jones">
             <organization>Microsoft</organization>
           </author>
-          <author fullname="A. Solberg">
-            <organization>Uninett</organization>
-          </author>
-          <author fullname="S. Gulliksson">
-            <organization>Schibsted</organization>
+          <author fullname="A.Å.  Solberg">
+            <organization>Sikt</organization>
           </author>
           <author fullname="John Bradley">
             <organization>Yubico</organization>
           </author>
-          <date day="9" month="Sept" year="2021"/>
+          <author fullname="G. De Marco">
+            <organization>Independent</organization>
+          </author>
+          <author fullname="V. Dzhuvinov">
+            <organization>Connect2id</organization>
+          </author>
+          <date day="22" month="May" year="2023"/>
         </front>
  </reference>
