@@ -1,13 +1,13 @@
 %%%
 title = "Security and Trust in OpenID for Verifiable Credentials Ecosystems"
-abbrev = "openid-4-vc-security-and-trust"
+abbrev = "draft-oid4vc-security-and-trust-latest"
 ipr = "none"
 workgroup = "connect"
 keyword = ["security", "openid", "ssi"]
 
 [seriesInfo]
 name = "Internet-Draft"
-value = "openid-4-vc-security-and-trust-1_0-00"
+value = "draft-oid4vc-security-and-trust-latest"
 status = "standard"
 
 [[author]]
