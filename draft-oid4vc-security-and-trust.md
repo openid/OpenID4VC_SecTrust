@@ -161,7 +161,7 @@ different parties.
       malicious party.
  * **For Issuers:**
    * **Wallet Integrity:** For the protection of the issuer-created Credentials,
-     the issuer trusts that wallet does not misuse the data of the user.
+     the issuer trusts that Wallet does not misuse the data of the user.
 
 
 ## Trust and Holder Binding
@@ -463,15 +463,15 @@ The Verifier trusts in the Authenticity of Claims as described above.
 This means:
 
 > **Security Requirement I-10:** The Issuer must authenticate/identify the
-End-User properly according to the expectations of the Verifier (which
+End-User properly according to the requirements of the Verifier (which
 may be defined in a specification, trust framework, or by convention).
 
 The Verifier trusts in the Integrity of Claims as described above. It is
 obvious that the Issuer must not issue false claims about the End-User.
 
-> **Security Requirement I-20:** The Issuer must only put correct and
-up-to-date claims about the End-User into the Credential where verified
-data is expected.
+> **Security Requirement I-20:** The Issuer must only put correct and up-to-date
+(at the time of issuance) claims about the End-User into the Credential where
+verified data is expected.
 
 (By convention, specification or trust framework,
 self-declared or otherwise "unverified" claims may be allowed in some
@@ -486,7 +486,7 @@ is a more secure option to prevent abuse of stolen credentials, it is
 not always desired to enforce holder binding.
 
 > **Privacy/Security Requirement P-10:** The protocol must ensure that
-> no third party can read the credential issued by the Issuer.
+> no third party can read the credential issued by the Issuer (during or after issuance).
 
 It must be ensured that an attacker cannot introduce credentials into a
 Wallet that are not intended for the End-User.
@@ -498,8 +498,8 @@ Wallet that are not intended for the End-User.
 Finally, an Issuer that learns about potential abuse of a credential
 must be able to revoke it.
 
-> **Security Requirement I-30:** The Issuer must revoke a Credential
-once the Issuer learns about potential abuse of the Credential.
+> **Security Requirement I-30:** The Issuer must be able to revoke a Credential,
+in particular once the Issuer learns about potential abuse of the Credential.
 
 ### Requirements on Presentation Process
 
@@ -519,7 +519,7 @@ that was authenticated using the End-Users identity.
 
 > **Security Requirement P-40:** The protocol must ensure that the
 > interaction between an attacker and a Verifier cannot be forwarded to
-> and successfully completed by a user.
+> and successfully completed by a user (victim).
 
 Likewise, an attacker interacting directly with a Verifier must not be
 able to re-use parts extracted from an End-User's session to
@@ -550,27 +550,27 @@ ends up in the credential.
 For cryptographic holder binding, the security largely depends on the
 quality of the key management, e.g. whether private keys can be
 extracted from the user's device and copied to another device. So the
-Verifier needs to trust in the wallet to implement the key management
+Verifier needs to trust in the Wallet to implement the key management
 securely.
 
 > **Security Requirement W-10:** The Wallet must implement the key
 management for cryptographic holder binding securely such that only the
 legitimate Holder can use a credential.
 
-This can be achieved, for example by using a secure enclave or similar
-technology.
+The precise method to achieve this depends on the software and hardware choices
+available and the desired level of security and assurance. One way to achieve
+this is by using a secure enclave or similar technology.
 
 > **Security Requirement CF-21:** For cryptographic holder binding, the
-> presentation format must allow that a Holder must prove possession of
-> the private key that is bound to the credential, usually by signing
-> over a challenge consisting of a nonce and an identifier for the
-> Verifier.
+> presentation format must allow requiring a Holder to prove possession of the
+> private key that is bound to the credential, usually by signing over a
+> challenge consisting of a nonce and an identifier for the Verifier.
 
 ## Ensuring Secure Storage of Credentials
 
 Ensuring secure credential storage can be achieved in one of two ways:
 
- * Direct: The Verifier checks the trustworthiness of the wallet
+ * Direct: The Verifier checks the trustworthiness of the Wallet
    directly by, for example, requiring an attested key management.
  * Indirect: The Verifier trusts the Issuer to only issue credentials to
    wallets that implement the key management securely.
@@ -578,13 +578,13 @@ Ensuring secure credential storage can be achieved in one of two ways:
 ### Direct Model
 
 > **Security Requirement V-10 (conditional):** The Verifier must ensure
-that the credential was stored in a secure wallet.
+that the credential was stored in a secure Wallet.
 
 ### Indirect Model
 
 Assuming this trust can be established by way of conformity assessment
 of some sort, the Issuer needs to make sure that it issues Credentials
-into a wallet it trusts and the Verifier needs to make sure that it
+into a Wallet it trusts and the Verifier needs to make sure that it
 accepts presentations only from wallets it trusts.
 
 In order to make the life of Verifiers easier, this concept obliges the
@@ -595,12 +595,12 @@ part of the rules a Verifier needs to understand and accept.
 From the Verifier’s standpoint it is now sufficient to ensure it accepts
 Credentials from this Issuer since, by conclusion, if it gets presented
 a valid Credential issued by this Issuer it must have come from a
-trustworthy wallet. This change significantly simplifies the protocol
+trustworthy Wallet. This change significantly simplifies the protocol
 and fosters privacy since the presentation process does not need to
-authenticate the wallet towards the Verifier.
+authenticate the Wallet towards the Verifier.
 
 > **Security Requirement I-50 (conditional):** The Issuer must ensure
-that the credential was stored in a secure wallet.
+that the credential was stored in a secure Wallet.
 
 Then, the Verifier must check that the Issuer actually adheres to this
 policy.
@@ -613,7 +613,7 @@ to trustworthy wallets.
 
 The End-User trusts the Issuer, the Wallet, and the Verifier to treat
 her data securely and only exchange data as needed preserving her
-privacy. The End-User trusts the wallet to validate the authenticity of
+privacy. The End-User trusts the Wallet to validate the authenticity of
 Issuers and Verifiers and provide the End-User with trustworthy
 information about those.
 
@@ -629,19 +629,17 @@ Even more important for Verifiers:
 
 Credentials must not be used without the End-Users consent.
 
-> **Privacy Requirement W-40:** The Wallet must ask the End-User for
-> meaningful consent before a Credential is used. The Wallet must
-> provide the End-User the opportunity to review any data that is shared
-> with a Verifier.
+> **Privacy Requirement W-40:** The Wallet must ask the End-User for meaningful
+> consent before a Credential is used. The Wallet must provide the End-User the
+> opportunity to review any data that is presented to a Verifier.
 
 The credential format must allow selective disclosure of data.
 
-> **Privacy Requirement CF-30:** The Credential Format must ensure that
-> there is a robust mechanism to ensure that data that is not to be
-> released to a Verifier cannot be extracted by the Verifier (selective
-> disclosure).
+> **Privacy Requirement CF-30:** The Credential Format must ensure that there is
+> a robust mechanism to ensure that data that is not to be released to a
+> Verifier cannot be extracted by the Verifier (e.g., selective disclosure).
 
-The End-User trusts the Issuer and the wallet provider to protect her
+The End-User trusts the Issuer and the Wallet provider to protect her
 from abuse of her Credentials. This mainly means that the implementation
 of the selected key management and protocols must be secure, but
 specifically the communication protocols must be designed such that an
@@ -672,8 +670,9 @@ On the other hand, the End-User does not want the Issuer to learn where
 she uses the Credentials. This must be supported by the Issuer, the
 Wallet, and the Trust Framework.
 
-> **Privacy Requirement P-80:** The protocol must ensure that the Issuer
-> cannot learn where the End-User uses the Credential.
+> **Privacy Requirement P-80:** The protocol, including the revocation
+> mechanism, must ensure that the Issuer cannot learn where the End-User uses
+> the Credential.
 
 > **Privacy Requirement W-60:** The Wallet must ensure that the Issuer
 > cannot learn where the End-User uses the Credential.
@@ -965,7 +964,7 @@ against this are discussed in Section 11.3. of the OID4VCI
 specification.
 
 **TODO** The spec does not distinguish between replay (attacker forwards
-code to other wallet/end-user) and stealing the code (attacker scans
+code to other Wallet/end-user) and stealing the code (attacker scans
 code intended for other user). This needs to be fixed.
 
 ### Compromised Credential Issuer
@@ -1002,7 +1001,7 @@ Verifier. This means that the Verifier then expects a presentation with
 a specific audience and nonce.
 
 Unless the attacker has access to the initial request between the
-Verifier and the wallet, the attacker cannot know the nonce that is
+Verifier and the Wallet, the attacker cannot know the nonce that is
 expected in the flow. This works similar to the state value in classic
 OAuth flows.
 
@@ -1013,13 +1012,13 @@ into the flow between the user and the Verifier. Similar attacks can
 happen in classic OAuth flows and are not mitigated by the use of
 "nonce" or state. However, for this (relatively weak) attack to succeed,
 a (relatively strong) attacker with access to the communication between
-the Verifier and the wallet is required. The likelihood of a successful
-attack can be reduced when, for the wallet, claimed URLs are used and
+the Verifier and the Wallet is required. The likelihood of a successful
+attack can be reduced when, for the Wallet, claimed URLs are used and
 custom schemes and endpoints on localhost addresses are avoided.
 
-Note: An additional encryption of the request to the wallet at the
+Note: An additional encryption of the request to the Wallet at the
 application layer would not prevent this attack as the attacker could
-still replay the encrypted request to the wallet.
+still replay the encrypted request to the Wallet.
 
 **PROBLEM:** If no holder binding is used, right now, there is no way to
 transport the nonce. I.e., an attacker might inject a presentation. In
@@ -1062,7 +1061,7 @@ RECOMMENDATION: While this is expected from OAuth implementations, the
 importance of this measure should be highlighted in the specification.
 
 **Note on web-to-app flows:** In the case of web-to-app flows (i.e., the
-Verifier is a website, but the wallet is an app), the authentication
+Verifier is a website, but the Wallet is an app), the authentication
 response needs to go back to the same browser where the user started the
 flow. This may require extra steps in the implementation.
 
@@ -1149,7 +1148,7 @@ the request to the Wallet.
 There are two options for the verification of the redirect URI:
 
  1. The Verifier specifies the redirect URI in the request to the
-    wallet. The request is signed using a key that the wallet can verify
+    Wallet. The request is signed using a key that the Wallet can verify
     and show the proper name of the Verifier to the user.
  2. The redirect URI is registered beforehand and therefore guaranteed
     to be authentic.
@@ -1304,7 +1303,7 @@ example, by caching the data for a random period of time.
 <reference anchor="TRAIN" target="https://oid2022.compute.dtu.dk/index.html">
         <front>
           <title>A novel approach to establish trust in Verifiable Credential
-issuers in Self-Sovereign Identity ecosystems using TRAIN</title>	
+issuers in Self-Sovereign Identity ecosystems using TRAIN</title>
            <author fullname="Isaac Henderson Johnson Jeyakumar">
             <organization>University of Stuttgart</organization>
           </author>
