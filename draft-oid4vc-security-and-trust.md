@@ -62,7 +62,7 @@ Web Token (JWT)" defined by JSON Web Token (JWT) [@!RFC7519], the term
 Signature (JWS) [@!RFC7515], and the term "Response Mode" defined by
 OAuth 2.0 Multiple Response Type Encoding Practices [@!OAuth.Responses].
 
-This specification also uses the following terms defined in [@!OpenID.VP] and [@!OpenID.VCI]. 
+This specification also uses the following terms defined in [@!OpenID.VP] and [@!OpenID.VCI].
 
 Credential:
 :  A set of one or more claims about a subject made by a Credential Issuer. Note that this definition of a term "Credential" in this specification is different from that in [@!OpenID.Core].
@@ -88,8 +88,8 @@ Verifier:
 Issuer-Holder-Verifier Model:
 :  A model for claims sharing where claims are issued in the form of Verifiable Credentials independent of the process of presenting them as Verifiable Presentation to the Verifiers. An issued Verifiable Credential can (but must not necessarily) be used multiple times.
 
-Holder Binding: 
-: Ability of the Holder to prove legitimate possession of a Verifiable Credential. 
+Holder Binding:
+: Ability of the Holder to prove legitimate possession of a Verifiable Credential.
 
 Wallet:
 :  An entity used by the Holder to receive, store, present, and manage Verifiable Credentials and key material. There is no single deployment model of a Wallet: Verifiable Credentials and keys can both be stored/managed locally, or by using a remote self-hosted service, or a remote third-party service. In the context of this specification, the Wallet acts as an OAuth 2.0 Authorization Server (see [@!RFC6749]) towards the Credential Verifier which acts as the OAuth 2.0 Client.
@@ -98,7 +98,7 @@ Wallet:
 # Trust Model
 
 Verifiable Credentials facilitate a model to obtain and
-present authoritative claims about a subject via a so-called Wallet (Issuer-Holder-Verifier Model). 
+present authoritative claims about a subject via a so-called Wallet (Issuer-Holder-Verifier Model).
 
 **TODO: add diagram**
 
@@ -109,7 +109,7 @@ a Verifier (the entity that needs to know the claim).
 
 A Credential can be presented multiple times during its lifecycle and multiple
 Credentials can be presented to a Verifier in a single transaction. Subsets of
-the claims in one or more credentials can be presented. 
+the claims in one or more credentials can be presented.
 
 The End-User then decides what Credential to use with which Verifier. The
 Verifier decides what Credential to accept from the End-User.
@@ -127,7 +127,7 @@ Presentations [@!OpenID.VP], with an optional use of SIOP v2 [@!OpenID.SIOPv2].
 ## Trust in the Issuer-Holder-Verifier Model
 
 Trust in the Issuer-Holder-Verifier Model means different things to
-different parties. 
+different parties.
 
  * **For Verifiers:**
     * **Issuer Identification:** The Verifier can identify the Issuer to
@@ -150,12 +150,12 @@ different parties.
  * **For Holders/End-Users:**
     * **Privacy (I):** A Holder can trust that no party learns any
       claims except Verifiers to whom the Holder has explicitly released
-      the claims. 
+      the claims.
     * **Privacy (II):** A Holder can trust that a Verifier only learns the
       claims that it intends to release to the Verifier and not more.
     * **Context (incl. Verifier Identification):** A Holder, when presenting Credentials, can identify
       which Verifier receives the data and for which session the data is
-      released (if there is more than one). 
+      released (if there is more than one).
     * **Correctness of Claims:** A Holder can trust that the claims in a
       Credential are correct and not modified by a
       malicious party.
@@ -186,12 +186,12 @@ Credential to its legitimate holder:
  * **Biometric Holder Binding**, e.g., via a passport photo. This method
    is well known from physical Credentials such as passports or id
    cards. During presentation, the Verifier compares the data in the
-   Credential with the respective biometric traits of the presenter.  
+   Credential with the respective biometric traits of the presenter.
  * **Claim-based Binding** via holder-related claims. E.g. a diploma
    might be bound to a person named "Erika Mustermann". This binding
    requires a primary Credential to prove the presenter's identity which
    in turn is bound to the legitimate holder using either biometric or
-   cryptographic holder binding or both.  
+   cryptographic holder binding or both.
  * **Cryptographic Binding**, i.e., the Credential is directly or
    indirectly bound to key material under the control of the legitimate
    holder. Only if the presenter can prove possession of the private key
@@ -210,7 +210,7 @@ child's birth certificate to a school. In this case, the Holder and
 legitimate possessor is the parent and the subject is the child.
 
 At least in theory, a credential can also hold information about
-multiple subjects. 
+multiple subjects.
 
 It is therefore important to distinguish between the information that
 the credential holds (about the subject) and the information that the
@@ -515,7 +515,7 @@ An attacker could extract messages of the presentation process and
 forward them to an End-User. The End-User could be confused about the
 purpose of the interaction and complete the presentation process on the
 attacker's behalf, giving the attacker access to resources or a session
-that was authenticated using the End-Users identity. 
+that was authenticated using the End-Users identity.
 
 > **Security Requirement P-40:** The protocol must ensure that the
 > interaction between an attacker and a Verifier cannot be forwarded to
@@ -539,7 +539,7 @@ credentials to the End-User. This means:
 > **Security Requirement I-40:** The Issuer must only include
 holder-binding data into the credential that is tied to the actual
 End-User (and not, e.g., include a cryptographic key under control by a
-third party).  
+third party).
 
 It must be ensured that during issuance, the correct holder-binding data
 ends up in the credential.
@@ -551,7 +551,7 @@ For cryptographic holder binding, the security largely depends on the
 quality of the key management, e.g. whether private keys can be
 extracted from the user's device and copied to another device. So the
 Verifier needs to trust in the wallet to implement the key management
-securely. 
+securely.
 
 > **Security Requirement W-10:** The Wallet must implement the key
 management for cryptographic holder binding securely such that only the
@@ -573,7 +573,7 @@ Ensuring secure credential storage can be achieved in one of two ways:
  * Direct: The Verifier checks the trustworthiness of the wallet
    directly by, for example, requiring an attested key management.
  * Indirect: The Verifier trusts the Issuer to only issue credentials to
-   wallets that implement the key management securely. 
+   wallets that implement the key management securely.
 
 ### Direct Model
 
@@ -585,19 +585,19 @@ that the credential was stored in a secure wallet.
 Assuming this trust can be established by way of conformity assessment
 of some sort, the Issuer needs to make sure that it issues Credentials
 into a wallet it trusts and the Verifier needs to make sure that it
-accepts presentations only from wallets it trusts. 
+accepts presentations only from wallets it trusts.
 
 In order to make the life of Verifiers easier, this concept obliges the
 Issuer to only issue Credentials to trustworthy wallets and to make its
 requirements transparent to Verifiers via its policy so this becomes
-part of the rules a Verifier needs to understand and accept. 
+part of the rules a Verifier needs to understand and accept.
 
 From the Verifier’s standpoint it is now sufficient to ensure it accepts
 Credentials from this Issuer since, by conclusion, if it gets presented
 a valid Credential issued by this Issuer it must have come from a
 trustworthy wallet. This change significantly simplifies the protocol
 and fosters privacy since the presentation process does not need to
-authenticate the wallet towards the Verifier. 
+authenticate the wallet towards the Verifier.
 
 > **Security Requirement I-50 (conditional):** The Issuer must ensure
 that the credential was stored in a secure wallet.
@@ -866,7 +866,7 @@ if there is only a single hard-coded Issuer in the ecosystem.)
 > The issuance protocol must ensure that no third party can read the
 > credential issued by the Issuer.
 
-On the network level, this is achieved by TLS encrypted connections. 
+On the network level, this is achieved by TLS encrypted connections.
 
 On top of TLS, the protocol uses an OAuth 2.0 flow to authorize the
 release of a credential.
@@ -915,7 +915,7 @@ pre-authorized code MUST (by definition) be short-lived and single-use.
 pre-authorized code is intercepted by a third party. For a QR code, it
 is recommended that the code is not displayed to the user in public
 environments. Deeplinks should, if possible, aim to target a specific
-application in order to avoid interception by third party applications. 
+application in order to avoid interception by third party applications.
 
 An additional PIN that is transferred from the issuer to the verifier
 can be used to protect the pre-authorized code.
@@ -942,12 +942,12 @@ endpoints listed above.
 If the Wallet is using a Credential Issuer identifier that is used by an
 honest party, it can be assumed that all endpoints used in the flow
 (authorization server, token endpoint, issuance endpoints) are provided
-by the same, honest party. 
+by the same, honest party.
 
 In this case, the latest point in the flow where an attacker can
 interfere with the process is the authorization response in the case of
 the authorization code flow and the pre-authorized code in case of the
-pre-authorized code flow. 
+pre-authorized code flow.
 
 #### Authorization Code Flow
 
@@ -966,7 +966,7 @@ specification.
 
 **TODO** The spec does not distinguish between replay (attacker forwards
 code to other wallet/end-user) and stealing the code (attacker scans
-code intended for other user). This needs to be fixed. 
+code intended for other user). This needs to be fixed.
 
 ### Compromised Credential Issuer
 
@@ -976,8 +976,8 @@ as described in (#malicious-credential-issuer-metadata-configurations)
 above.
 
 In the first case (No Mix-Up), the attacker has full control over the
-flow. The attacker can return, for example, a credential created for 
-an End-User obtained from a completely different Issuer. 
+flow. The attacker can return, for example, a credential created for
+an End-User obtained from a completely different Issuer.
 
 **Recommendation:** The Wallet MUST verify that the Issuer of the received
 credential is the expected Credential Issuer. This means that the
@@ -1015,7 +1015,7 @@ happen in classic OAuth flows and are not mitigated by the use of
 a (relatively strong) attacker with access to the communication between
 the Verifier and the wallet is required. The likelihood of a successful
 attack can be reduced when, for the wallet, claimed URLs are used and
-custom schemes and endpoints on localhost addresses are avoided. 
+custom schemes and endpoints on localhost addresses are avoided.
 
 Note: An additional encryption of the request to the wallet at the
 application layer would not prevent this attack as the attacker could
@@ -1088,11 +1088,11 @@ can be found in the Cross-Device Security BCP.
 > own control.
 
 A prerequisite for a successful attack of this kind is that the attacker
-has access to some messages between the Wallet and the Verifier. 
+has access to some messages between the Wallet and the Verifier.
 
 The attacker might have access to the authentication response. In this
 case, the attacker has access to the presentation contained in the VP
-Token. 
+Token.
 
 The attacker can now start an interaction with the Verifier under his
 control. The attacker can then send the presentation to the Verifier
@@ -1144,13 +1144,13 @@ It is therefore important that the authentication response is not
 sent to an attacker-controlled endpoint.
 
 The authentication response is sent to the redirect URI specified in
-the request to the Wallet. 
+the request to the Wallet.
 
 There are two options for the verification of the redirect URI:
 
  1. The Verifier specifies the redirect URI in the request to the
     wallet. The request is signed using a key that the wallet can verify
-    and show the proper name of the Verifier to the user. 
+    and show the proper name of the Verifier to the user.
  2. The redirect URI is registered beforehand and therefore guaranteed
     to be authentic.
 
@@ -1183,7 +1183,7 @@ Verifier and the Issuer, with the following (potential) exceptions:
    or that the Wallet needs a new credential to present to the Verifier
    in order to avoid correlation. The point in time when such an
    interaction happens may leak information about the Wallet's actions,
-   but is usually a weak correlation vector. 
+   but is usually a weak correlation vector.
  * The Verifier may need to retrieve a signature verification key,
    revocation information or other data from the Issuer before verifying
    the credential. This is not a privacy concern, but may leak
@@ -1196,7 +1196,7 @@ by refreshing credentials at a random point in time.
 example, by caching the data for a random period of time.
 
 
-**TODO** To be discussed: Difference Same-Device Cross-Device where not discussed already. 
+**TODO** To be discussed: Difference Same-Device Cross-Device where not discussed already.
 
 
 {backmatter}
@@ -1304,7 +1304,7 @@ example, by caching the data for a random period of time.
 <reference anchor="TRAIN" target="https://oid2022.compute.dtu.dk/index.html">
         <front>
           <title>A novel approach to establish trust in Verifiable Credential
-issuers in Self-Sovereign Identity ecosystems using TRAIN</title>	  
+issuers in Self-Sovereign Identity ecosystems using TRAIN</title>	
            <author fullname="Isaac Henderson Johnson Jeyakumar">
             <organization>University of Stuttgart</organization>
           </author>
@@ -1394,7 +1394,7 @@ issuers in Self-Sovereign Identity ecosystems using TRAIN</title>
         </author>
         <author initials="M." surname="Scurtescu" fullname="M. Scurtescu">
             <organization>Google</organization>
-        </author>        
+        </author>
         <author initials="P." surname="Tarjan" fullname="Facebook">
             <organization>Evernym</organization>
         </author>
