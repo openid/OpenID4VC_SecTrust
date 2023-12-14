@@ -1,0 +1,2917 @@
+<!DOCTYPE html>
+<html lang="en" class="Internet-Draft">
+<head>
+<meta charset="utf-8">
+<meta content="Common,Latin" name="scripts">
+<meta content="initial-scale=1.0" name="viewport">
+<title>Security and Trust in OpenID for Verifiable Credentials Ecosystems</title>
+<meta content="Daniel Fett" name="author">
+<meta content="Torsten Lodderstedt" name="author">
+<meta content="
+       This specification describes the trust architecture in OpenID for
+Verifiable Credentials ( ,  ,  ), outlines security considerations and
+requirements for the components in an ecosystem, and provides an
+informal security analysis of the OpenID for VC protocols. 
+    " name="description">
+<meta content="xml2rfc 3.17.5" name="generator">
+<meta content="security" name="keyword">
+<meta content="openid" name="keyword">
+<meta content="ssi" name="keyword">
+<meta content="draft-oid4vc-security-and-trust-latest" name="ietf.draft">
+<!-- Generator version information:
+  xml2rfc 3.17.5
+    Python 3.11.4
+    ConfigArgParse 1.5.3
+    google-i18n-address 3.1.0
+    intervaltree 3.1.0
+    Jinja2 3.1.2
+    lxml 4.9.3
+    platformdirs 3.10.0
+    pycountry 22.3.5
+    PyYAML 6.0
+    requests 2.31.0
+    setuptools 67.7.2
+    six 1.16.0
+    wcwidth 0.2.6
+-->
+<link href="draft-oid4vc-security-and-trust.xml" rel="alternate" type="application/rfc+xml">
+<link href="#copyright" rel="license">
+<style type="text/css">@font-face {
+  font-family: 'Lora';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Italic'), local('Lora-Italic'), url('https://martinthomson.github.io/rfc-css/fonts/lora-italic-cyrillic-ext.woff2') format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C88, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Italic'), local('Lora-Italic'), url('https://martinthomson.github.io/rfc-css/fonts/lora-italic-cyrillic-ext.woff2') format('woff2');
+  unicode-range: U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Italic'), local('Lora-Italic'), url('https://martinthomson.github.io/rfc-css/fonts/lora-italic-vietnamese.woff2') format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+1EA0-1EF9, U+20AB;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Italic'), local('Lora-Italic'), url('https://martinthomson.github.io/rfc-css/fonts/lora-italic-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+@font-face {
+  font-family: 'Lora';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Italic'), local('Lora-Italic'), url('https://martinthomson.github.io/rfc-css/fonts/lora-italic-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Regular'), local('Lora-Regular'), url('https://martinthomson.github.io/rfc-css/fonts/lora-regular-cyrillic-ext.woff2') format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C88, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Regular'), local('Lora-Regular'), url('https://martinthomson.github.io/rfc-css/fonts/lora-regular-cyrillic.woff2') format('woff2');
+  unicode-range: U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Regular'), local('Lora-Regular'), url('https://martinthomson.github.io/rfc-css/fonts/lora-regular-vietnamese.woff2') format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+1EA0-1EF9, U+20AB;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Regular'), local('Lora-Regular'), url('https://martinthomson.github.io/rfc-css/fonts/lora-regular-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Regular'), local('Lora-Regular'), url('https://martinthomson.github.io/rfc-css/fonts/lora-regular-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: local('Lora Bold'), local('Lora-Bold'), url('https://martinthomson.github.io/rfc-css/fonts/lora-bold-cyrillic-ext.woff2') format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C88, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: local('Lora Bold'), local('Lora-Bold'), url('https://martinthomson.github.io/rfc-css/fonts/lora-bold-cyrillic.woff2') format('woff2');
+  unicode-range: U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: local('Lora Bold'), local('Lora-Bold'), url('https://martinthomson.github.io/rfc-css/fonts/lora-bold-vietnamese.woff2') format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+1EA0-1EF9, U+20AB;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: local('Lora Bold'), local('Lora-Bold'), url('https://martinthomson.github.io/rfc-css/fonts/lora-bold-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: local('Lora Bold'), local('Lora-Bold'), url('https://martinthomson.github.io/rfc-css/fonts/lora-bold-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: local('Lora SemiBold'), local('Lora-SemiBold'), url('https://martinthomson.github.io/rfc-css/fonts/lora-semibold-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: 'Cabin Condensed';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: local('Cabin Condensed SemiBold'), local('CabinCondensed-SemiBold'), url('https://martinthomson.github.io/rfc-css/fonts/cabincondensed-semibold-vietnamese.woff2') format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+1EA0-1EF9, U+20AB;
+}
+@font-face {
+  font-family: 'Cabin Condensed';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: local('Cabin Condensed SemiBold'), local('CabinCondensed-SemiBold'), url('https://martinthomson.github.io/rfc-css/fonts/cabincondensed-semibold-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: 'Cabin Condensed';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: local('Cabin Condensed SemiBold'), local('CabinCondensed-SemiBold'), url('https://martinthomson.github.io/rfc-css/fonts/cabincondensed-semibold-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: 'Oxygen Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Oxygen Mono'), local('OxygenMono-Regular'), url('https://martinthomson.github.io/rfc-css/fonts/oxygenmono-regular-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: 'Oxygen Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Oxygen Mono'), local('OxygenMono-Regular'), url('https://martinthomson.github.io/rfc-css/fonts/oxygenmono-regular-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+:root {
+  color-scheme: light dark;
+  --background-color: #fff;
+  --text-color: #222;
+  --title-color: #191919;
+  --link-color: #2a6496;
+  --highlight-color: #f9f9f9;
+  --line-color: #eee;
+  --pilcrow-weak: #ddd;
+  --pilcrow-strong: #bbb;
+  --small-font-size: 14.5px;
+  --font-mono: 'Oxygen Mono', monospace;
+  scrollbar-color: #bbb #eee;
+}
+body {
+  max-width: 600px;
+  margin: 75px auto;
+  padding: 0 5px;
+  color: var(--text-color);
+  background-color: var(--background-color);
+  font: 16px/22px "Lora", serif;
+  scroll-behavior: smooth;
+}
+
+.ears {
+  display: none;
+}
+
+/* headings */
+h1, h2, h3, h4, h5, h6 {
+  font-family: "Cabin Condensed", sans-serif;
+  font-weight: 600;
+  margin: 0.8em 0 0.3em;
+  font-size-adjust: 0.5;
+  color: var(--title-color);
+}
+h1#title {
+  font-size: 32px;
+  line-height: 40px;
+  clear: both;
+}
+h1#title, h1#rfcnum {
+  margin: 1.5em 0 0.2em;
+}
+h1#rfcnum + h1#title {
+  margin: 0.2em 0;
+}
+
+h1, h2, h3 {
+  font-size: 22px;
+  line-height: 27px;
+}
+h4, h5, h6 {
+  font-size: 20px;
+  line-height: 24px;
+}
+
+/* general structure */
+.author {
+  padding-bottom: 0.3em;
+}
+#abstract+p {
+  font-size: 18px;
+  line-height: 24px;
+}
+#abstract+p code, #abstract+p samp, #abstract+p tt {
+  font-size: 16px;
+  line-height: 0;
+}
+
+p {
+  padding: 0;
+  margin: 0.5em 0;
+  text-align: left;
+}
+div {
+  margin: 0;
+}
+.alignRight.art-text {
+  background-color: var(--highlight-color);
+  border: 1px solid var(--line-color);
+  border-radius: 3px;
+  padding: 0.5em 1em 0;
+  margin-bottom: 0.5em;
+}
+.alignRight.art-text pre {
+  padding: 0;
+  width: auto;
+}
+.alignRight {
+  margin: 1em 0;
+}
+.alignRight > *:first-child {
+  border: none;
+  margin: 0;
+  float: right;
+  clear: both;
+}
+.alignRight > *:nth-child(2) {
+  clear: both;
+  display: block;
+  border: none;
+}
+svg {
+  display: block;
+}
+/* font-family isn't space-separated, but =~ will have to do */
+svg[font-family~="monospace" i], svg [font-family~="monospace" i] {
+  font-family: var(--font-mono);
+}
+.alignCenter.art-text {
+  background-color: var(--highlight-color);
+  border: 1px solid var(--line-color);
+  border-radius: 3px;
+  padding: 0.5em 1em 0;
+  margin-bottom: 0.5em;
+}
+.alignCenter.art-text pre {
+  padding: 0;
+  width: auto;
+}
+.alignCenter {
+  margin: 1em 0;
+}
+.alignCenter > *:first-child {
+  border: none;
+  /* this isn't optimal, but it's an existence proof.  PrinceXML doesn't
+     support flexbox yet.
+  */
+  display: table;
+  margin: 0 auto;
+}
+
+/* lists */
+ol, ul {
+  padding: 0;
+  margin: 0 0 0.5em 2em;
+}
+:is(ol, ul) :is(ol, ul) {
+  margin-left: 1em;
+}
+li {
+  margin: 0 0 0.25em 0;
+}
+.ulCompact li {
+  margin: 0;
+}
+ul.empty, .ulEmpty {
+  list-style-type: none;
+}
+ul.empty li, .ulEmpty li {
+  margin-top: 0.5em;
+}
+:is(ul, ol).compact, .ulCompact, .olCompact {
+  line-height: 1;
+  margin: 0 0 0 2em;
+}
+
+/* definition lists */
+dl {
+  clear: left;
+  --indent: 3ch;
+  /* --indent: attr(indent ch); not supported in any browser, but we can dream */
+}
+dl.olPercent {
+  --indent: 5ch;
+}
+dl > dt {
+  float: left;
+  margin-right: 2ch;
+  min-width: 8ch;
+}
+dl.dlNewline > dt {
+  float: none;
+}
+dl > dd {
+  margin-bottom: .8em;
+  margin-left: var(--indent) !important; /* stupid element overrides */
+  min-height: 2ex;
+}
+dl.olPercent > dt {
+  min-width: calc(var(--indent) - 2ch);
+}
+:is(dl.compact, .dlCompact) > dd {
+  margin-bottom: 0;
+}
+:is(dl.compact, .dlCompact) > dd > :is(:first-child, .break:first-child + *) {
+  margin-top: 0;
+}
+:is(dl.compact, .dlCompact) > dd > :is(:last-child) {
+  margin-bottom: 0;
+}
+dl > dd > dl {
+  margin-top: 0.5em;
+  margin-bottom: 0;
+}
+:is(dd, span).break {
+  display: none;
+}
+
+/* links */
+a, a[href].selfRef:hover {
+  text-decoration: none;
+}
+a[href] {
+  color: var(--link-color);
+}
+a[href].selfRef, .iref + a[href].internal {
+  color: var(--text-color);
+}
+a[href]:hover {
+  text-decoration: underline;
+}
+a[href].selfRef:hover {
+  background-color: var(--highlight-color);
+}
+a.xref:is(.cite, .auto), :is(#status-of-memo, #copyright) a {
+  white-space: nowrap;
+}
+
+/* Figures */
+tt, code, pre {
+  background-color: var(--highlight-color);
+  font: 14px/22px var(--font-mono);
+}
+tt, code {
+  /* changing the font for inline elements leads to different ascender
+     and descender heights; as we want to retain baseline alignment,
+     remove leading to avoid altering the final height of lines
+     note: this fails if these blocks take an entire line,
+     a different solution would be great */
+  line-height: 0;
+}
+:is(h1, h2, h3, h4, h5, h6) :is(tt, code) {
+  font-size: 84%;
+}
+pre {
+  border: 1px solid var(--line-color);
+  font-size: 13.5px;
+  line-height: 16px;
+  letter-spacing: -0.2px;
+  margin: 5px;
+  padding: 5px;
+}
+img {
+  max-width: 100%;
+}
+figure {
+  margin: 0.5em 0;
+  padding: 0;
+}
+figure blockquote {
+  margin: 0.8em 0.4em 0.4em;
+}
+figcaption, caption {
+  font-style: italic;
+  margin: 0.5em 1.5em;
+  text-align: left;
+}
+@media screen {
+  /* Auto-collapse boilerplate. */
+  :is(#status-of-memo, #copyright) p {
+    margin: -2px 0;
+    max-height: 0;
+    transition: max-height 2s ease, margin 0.5s ease 0.5s;
+    overflow: hidden;
+  }
+  :is(#status-of-memo, #copyright):hover p,
+  :is(#status-of-memo, #copyright) h2:target ~ p {
+    margin: 0.5em 0;
+    max-height: 500px;
+    overflow: auto;
+  }
+  pre, svg {
+    display: inline-block;
+    overflow-x: auto;
+  }
+  pre {
+    max-width: 100%;
+    width: calc(100% - 22px - 1em);
+  }
+  svg {
+    max-width: calc(100% - 22px - 1em);
+  }
+  figure pre {
+    display: block;
+    width: calc(100% - 25px);
+  }
+  :is(pre, svg) + .pilcrow {
+    display: inline-block;
+    vertical-align: text-bottom;
+    padding-bottom: 8px;
+  }
+}
+
+/* aside, blockquote */
+aside, blockquote {
+  margin-left: 0;
+  padding: 0 2em;
+  font-style: italic;
+}
+blockquote {
+  margin: 1em 0;
+}
+cite {
+  display: block;
+  text-align: right;
+  font-style: italic;
+}
+
+/* tables */
+table {
+  max-width: 100%;
+  margin: 0 0 1em;
+  border-collapse: collapse;
+}
+table.right {
+  margin-left: auto;
+}
+table.center {
+  margin-left: auto;
+  margin-right: auto;
+}
+table.left {
+  margin-right: auto;
+}
+thead, tbody {
+  border: 1px solid var(--line-color);
+}
+th, td {
+  text-align: left;
+  vertical-align: top;
+  padding: 5px 10px;
+}
+th {
+  background-color: var(--line-color);
+}
+:is(tr:nth-child(2n), thead+tbody > tr:nth-child(2n+1)) > td {
+  background-color: var(--background-color);
+}
+:is(tr:nth-child(2n+1), thead+tbody > tr:nth-child(2n)) > td {
+  background-color: var(--highlight-color);
+}
+table caption {
+  margin: 0;
+  padding: 3px 0 3px 1em;
+}
+table p {
+  margin: 0;
+}
+
+/* pilcrow */
+a.pilcrow {
+  margin-left: 3px;
+  opacity: 0.2;
+  user-select: none;
+}
+a.pilcrow[href] { color: var(--pilcrow-weak); }
+a.pilcrow[href]:hover { text-decoration: none; }
+@media not print {
+  :hover > a.pilcrow {
+    opacity: 1;
+  }
+  a.pilcrow[href]:hover {
+    color: var(--pilcrow-strong);
+    background-color: transparent;
+  }
+}
+@media print {
+  a.pilcrow {
+    display: none;
+  }
+}
+
+/* misc */
+hr {
+  border: 0;
+  border-top: 1px solid var(--line-color);
+}
+.bcp14 {
+  font-variant: small-caps;
+  font-weight: 600;
+  font-size: var(--small-font-size);
+}
+.role {
+  font-variant: all-small-caps;
+}
+sub, sup {
+  line-height: 1;
+  font-size: 80%;
+}
+
+/* info block */
+#identifiers {
+  margin: 0;
+  font-size: var(--small-font-size);
+  line-height: 18px;
+  --identifier-width: 15ch;
+}
+#identifiers dt {
+  width: var(--identifier-width);
+  min-width: var(--identifier-width);
+  clear: left;
+  float: left;
+  text-align: right;
+  margin-right: 1ch;
+}
+#identifiers dd {
+  margin: 0;
+  margin-left: calc(1em + var(--identifier-width)) !important;
+  min-width: 5em;
+}
+#identifiers .authors .author {
+  display: inline-block;
+  margin-right: 1.5em;
+}
+#identifiers .authors .org {
+  font-style: italic;
+}
+
+/* The prepared/rendered info at the very bottom of the page */
+.docInfo {
+  color: #999;
+  font-size: 0.9em;
+  font-style: italic;
+  margin-top: 2em;
+}
+.docInfo .prepared {
+  float: left;
+}
+.docInfo .prepared {
+  float: right;
+}
+
+/* table of contents */
+#toc {
+  padding: 0.75em 0 2em 0;
+  margin-bottom: 1em;
+}
+#toc nav ul {
+  margin: 0 0.5em 0 0;
+  padding: 0;
+  list-style: none;
+}
+#toc nav li {
+  line-height: 1.3em;
+  margin: 0.75em 0;
+  padding-left: 1.2em;
+  text-indent: -1.2em;
+}
+#toc a.xref {
+  white-space: normal;
+}
+/* references */
+.references dt {
+  text-align: right;
+  font-weight: bold;
+  min-width: 10ch;
+  margin-right: 1.5ch;
+}
+.references dt:target::before {
+  content: "⇒";
+  width: 15px;
+  margin: 0 10px 0 -25px;
+}
+.references dd {
+  margin-left: 12ch !important;
+  overflow: auto;
+}
+
+.refInstance {
+  margin-bottom: 1.25em;
+}
+
+.references .ascii {
+  margin-bottom: 0.25em;
+}
+
+/* index */
+#rfc\.index\.index + ul {
+  margin-left: 0;
+}
+
+/* authors */
+address.vcard {
+  font-style: normal;
+  margin: 1em 0;
+}
+address.vcard .nameRole {
+  font-weight: 700;
+  margin-left: 0;
+}
+address.vcard .label {
+  margin: 0.5em 0;
+}
+address.vcard .type {
+  display: none;
+}
+.alternative-contact {
+  margin: 1.5em 0 1em;
+}
+hr.addr {
+  border-top: 1px dashed;
+  margin: 0;
+  color: #ddd;
+  max-width: calc(100% - 16px);
+}
+@media (min-width: 500px) {
+  #authors-addresses > section {
+    column-count: 2;
+    column-gap: 20px;
+  }
+  #authors-addresses > section > h2 {
+    column-span: all;
+  }
+  /* hack for break-inside: avoid-column */
+  #authors-addresses address {
+    display: inline-block;
+    break-inside: avoid-column;
+  }
+}
+
+.rfcEditorRemove p:first-of-type {
+  font-style: italic;
+}
+.cref {
+  background-color: rgba(249, 232, 105, 0.3);
+  padding: 2px 4px;
+}
+.crefSource {
+  font-style: italic;
+}
+/* alternative layout for smaller screens */
+@media screen and (max-width: 929px) {
+  #toc {
+    position: fixed;
+    z-index: 2;
+    top: 0;
+    right: 0;
+    padding: 0;
+    margin: 0;
+    border-bottom: 1px solid #ccc;
+    opacity: 0.6;
+  }
+  #toc.active {
+      opacity: 1;
+  }
+  #toc h2 {
+    margin: 0;
+    padding: 2px 0 2px 6px;
+    padding-right: 1em;
+    font-size: 18px;
+    line-height: 24px;
+    min-width: 190px;
+    text-align: right;
+    background-color: #444;
+    color: white;
+    cursor: pointer;
+  }
+  #toc h2::before { /* css hamburger */
+    float: right;
+    position: relative;
+    width: 1em;
+    height: 1px;
+    left: -164px;
+    margin: 8px 0 0 0;
+    background: white none repeat scroll 0 0;
+    box-shadow: 0 4px 0 0 white, 0 8px 0 0 white;
+    content: "";
+  }
+  #toc nav {
+    display: none;
+    background-color: var(--background-color);
+    padding: 0.5em 1em 1em;
+    overflow: auto;
+    overscroll-behavior: contain;
+    height: calc(100vh - 48px);
+    border-left: 1px solid #ddd;
+  }
+  #toc.active nav {
+    display: block;
+  }
+  /* Make the collapsed ToC header render white on gray also when it's a link */
+  #toc h2 a,
+  #toc h2 a:link,
+  #toc h2 a:focus,
+  #toc h2 a:hover,
+  #toc a.toplink,
+  #toc a.toplink:hover {
+    color: white;
+    background-color: #444;
+    text-decoration: none;
+  }
+  #toc a.toplink {
+    margin-top: 2px;
+  }
+}
+
+/* alternative layout for wide screens */
+@media screen and (min-width: 930px) {
+  body {
+    padding-right: 360px;
+    padding-right: calc(min(180px + 20%, 500px));
+  }
+  #toc {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    right: calc(50vw - 480px);
+    width: 312px;
+    margin: 0;
+    padding: 0;
+    z-index: 1;
+  }
+  #toc h2 {
+    margin: 0;
+    padding: 0.25em 1em 1em 0;
+  }
+  #toc nav {
+    display: block;
+    height: calc(90vh - 84px);
+    bottom: 0;
+    padding: 0.5em 0 2em;
+    overflow: auto;
+    overscroll-behavior: contain;
+    scrollbar-width: thin;
+  }
+  #toc nav > ul  {
+    margin-bottom: 2em;
+  }
+  #toc ul {
+    margin: 0 0 0 4px;
+    font-size: var(--small-font-size);
+  }
+  #toc ul :is(p, li) {
+    margin: 2px 0;
+    line-height: 22px;
+  }
+  img { /* future proofing */
+    max-width: 100%;
+    height: auto;
+  }
+}
+
+/* pagination */
+@media print {
+  body {
+    width: 100%;
+  }
+  p {
+    orphans: 3;
+    widows: 3;
+  }
+  #n-copyright-notice {
+    border-bottom: none;
+  }
+  #toc, #n-introduction {
+    page-break-before: always;
+  }
+  #toc {
+    border-top: none;
+    padding-top: 0;
+  }
+  figure, pre {
+    page-break-inside: avoid;
+  }
+  figure {
+    overflow: scroll;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    page-break-after: avoid;
+  }
+  h2+*, h3+*, h4+*, h5+*, h6+* {
+    page-break-before: avoid;
+  }
+  pre {
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    font-size: 10pt;
+  }
+  table {
+    border: 1px solid #ddd;
+  }
+  td {
+    border-top: 1px solid #ddd;
+  }
+}
+
+@page :first {
+  padding-top: 0;
+  @top-left {
+    content: normal;
+    border: none;
+  }
+  @top-center {
+    content: normal;
+    border: none;
+  }
+  @top-right {
+    content: normal;
+    border: none;
+  }
+}
+
+@page {
+  size: A4;
+  margin-bottom: 45mm;
+  padding-top: 20px;
+}
+
+/* Changes introduced to fix issues found during implementation */
+
+/* Separate body from document info even without intervening H1 */
+section {
+  clear: both;
+}
+
+/* Top align author divs, to avoid names without organization dropping level with org names */
+.author {
+  vertical-align: top;
+}
+
+/* Style section numbers with more space between number and title */
+.section-number {
+  padding-right: 0.5em;
+}
+
+/* Add styling for a link in the ToC that points to the top of the document */
+a.toplink {
+  float: right;
+  margin: 8px 0.5em 0;
+}
+
+/* Provide styling for table cell text alignment */
+table .text-left {
+  text-align: left;
+}
+table .text-center {
+  text-align: center;
+}
+table .text-right {
+  text-align: right;
+}
+
+/* Make the alternative author contact information look less like just another
+   author, and group it closer with the primary author contact information */
+.alternative-contact {
+  margin: 0.5em 0 0.25em 0;
+}
+address .non-ascii {
+  margin: 0 0 0 2em;
+}
+
+/* With it being possible to set tables with alignment
+  left, center, and right, { width: 100%; } does not make sense */
+table {
+  width: auto;
+}
+
+/* Avoid reference text that sits in a block with very wide left margin,
+   because of a long floating dt label.*/
+.references dd {
+  overflow: visible;
+}
+
+/* Control caption placement */
+caption {
+  caption-side: bottom;
+}
+
+/* Limit the width of the author address vcard, so names in right-to-left
+   script don't end up on the other side of the page. */
+
+address.vcard {
+  max-width: 20em;
+  margin-right: auto;
+}
+
+/* For address alignment dependent on LTR or RTL scripts */
+address div.left {
+  text-align: left;
+}
+address div.right {
+  text-align: right;
+}
+
+/* Give the table caption label the same styling as the figcaption */
+
+@media print {
+  .toplink {
+    display: none;
+  }
+
+  /* avoid overwriting the top border line with the ToC header */
+  #toc {
+    padding-top: 1px;
+  }
+
+  /* Avoid page breaks inside dl and author address entries */
+  dd {
+    page-break-before: avoid;
+  }
+  .vcard {
+    page-break-inside: avoid;
+  }
+
+}
+
+/* Dark mode. */
+@media (prefers-color-scheme: dark) {
+:root {
+  --background-color: #121212;
+  --text-color: #f0f0f0;
+  --title-color: #fff;
+  --link-color: #4da4f0;
+  --highlight-color: #282828;
+  --line-color: #444;
+  --pilcrow-weak: #444;
+  --pilcrow-strong: #666;
+  scrollbar-color: #777 #333;
+}
+}
+
+/* SVG Trick: a prefix match works because only black and white are allowed */
+svg :is([stroke="black"], [stroke^="#000"]) {
+  stroke: var(--text-color);
+}
+svg :is([stroke="white"], [stroke^="#fff"]) {
+  stroke: var(--background-color);
+}
+svg :is([fill="black"], [fill^="#000"], :not([fill])) {
+  fill: var(--text-color);
+}
+svg :is([fill="white"], [fill^="#fff"]) {
+  fill: var(--background-color);
+}
+</style>
+
+</head>
+<body class="xml2rfc">
+<table class="ears">
+<thead><tr>
+<td class="left"></td>
+<td class="center">draft-oid4vc-security-and-trust-latest</td>
+<td class="right">August 2023</td>
+</tr></thead>
+<tfoot><tr>
+<td class="left">Fett &amp; Lodderstedt</td>
+<td class="center">Standards Track</td>
+<td class="right">[Page]</td>
+</tr></tfoot>
+</table>
+<div id="external-metadata" class="document-information"></div>
+<div id="internal-metadata" class="document-information">
+<dl id="identifiers">
+<dt class="label-workgroup">Workgroup:</dt>
+<dd class="workgroup">connect</dd>
+<dt class="label-published">Published:</dt>
+<dd class="published">
+<time datetime="2023-08-14" class="published">14 August 2023</time>
+    </dd>
+<dt class="label-authors">Authors:</dt>
+<dd class="authors">
+<div class="author">
+      <div class="author-name">D. Fett</div>
+<div class="org">yes.com</div>
+</div>
+<div class="author">
+      <div class="author-name">T. Lodderstedt</div>
+<div class="org">yes.com</div>
+</div>
+</dd>
+</dl>
+</div>
+<h1 id="title">Security and Trust in OpenID for Verifiable Credentials Ecosystems</h1>
+<section id="section-abstract">
+      <h2 id="abstract"><a href="#abstract" class="selfRef">Abstract</a></h2>
+<p id="section-abstract-1">This specification describes the trust architecture in OpenID for
+Verifiable Credentials (<span>[<a href="#OpenID.VCI" class="cite xref">OpenID.VCI</a>]</span>, <span>[<a href="#OpenID.VP" class="cite xref">OpenID.VP</a>]</span>, <span>[<a href="#OpenID.SIOPv2" class="cite xref">OpenID.SIOPv2</a>]</span>), outlines security considerations and
+requirements for the components in an ecosystem, and provides an
+informal security analysis of the OpenID for VC protocols.<a href="#section-abstract-1" class="pilcrow">¶</a></p>
+</section>
+<section class="note rfcEditorRemove" id="section-note.1">
+      <h2 id="name-discussion-venues">
+<a href="#name-discussion-venues" class="section-name selfRef">Discussion Venues</a>
+      </h2>
+<p id="section-note.1-1">This note is to be removed before publishing as an RFC.<a href="#section-note.1-1" class="pilcrow">¶</a></p>
+<p id="section-note.1-2">Source for this draft and an issue tracker can be found at
+    <span><a href="https://github.com/vcstuff/oid4vc-security-and-trust">https://github.com/vcstuff/oid4vc-security-and-trust</a></span>.<a href="#section-note.1-2" class="pilcrow">¶</a></p>
+</section>
+<div id="toc">
+<section id="section-toc.1">
+        <a href="#" onclick="scroll(0,0)" class="toplink">▲</a><h2 id="name-table-of-contents">
+<a href="#name-table-of-contents" class="section-name selfRef">Table of Contents</a>
+        </h2>
+<nav class="toc"><ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.1">
+            <p id="section-toc.1-1.1.1" class="keepWithNext"><a href="#section-1" class="auto internal xref">1</a>.  <a href="#name-introduction" class="internal xref">Introduction</a></p>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.2">
+            <p id="section-toc.1-1.2.1" class="keepWithNext"><a href="#section-2" class="auto internal xref">2</a>.  <a href="#name-terminology" class="internal xref">Terminology</a></p>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3">
+            <p id="section-toc.1-1.3.1"><a href="#section-3" class="auto internal xref">3</a>.  <a href="#name-trust-model" class="internal xref">Trust Model</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.1">
+                <p id="section-toc.1-1.3.2.1.1" class="keepWithNext"><a href="#section-3.1" class="auto internal xref">3.1</a>.  <a href="#name-trust-in-the-issuer-holder-" class="internal xref">Trust in the Issuer-Holder-Verifier Model</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.2">
+                <p id="section-toc.1-1.3.2.2.1"><a href="#section-3.2" class="auto internal xref">3.2</a>.  <a href="#name-trust-and-holder-binding" class="internal xref">Trust and Holder Binding</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.2.2.1">
+                    <p id="section-toc.1-1.3.2.2.2.1.1"><a href="#section-3.2.1" class="auto internal xref">3.2.1</a>.  <a href="#name-holder-binding-vs-holder-id" class="internal xref">Holder Binding vs. Holder Identification</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.2.2.2">
+                    <p id="section-toc.1-1.3.2.2.2.2.1"><a href="#section-3.2.2" class="auto internal xref">3.2.2</a>.  <a href="#name-holder-binding-and-reuse-of" class="internal xref">Holder Binding and Reuse of Credentials</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.2.2.3">
+                    <p id="section-toc.1-1.3.2.2.2.3.1"><a href="#section-3.2.3" class="auto internal xref">3.2.3</a>.  <a href="#name-enforcing-holder-binding" class="internal xref">Enforcing Holder Binding</a></p>
+</li>
+                </ul>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.3">
+                <p id="section-toc.1-1.3.2.3.1"><a href="#section-3.3" class="auto internal xref">3.3</a>.  <a href="#name-storage-of-credentials-and-" class="internal xref">Storage of Credentials and Presentations</a></p>
+</li>
+            </ul>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4">
+            <p id="section-toc.1-1.4.1"><a href="#section-4" class="auto internal xref">4</a>.  <a href="#name-security-and-privacy-requir" class="internal xref">Security and Privacy Requirements</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.1">
+                <p id="section-toc.1-1.4.2.1.1"><a href="#section-4.1" class="auto internal xref">4.1</a>.  <a href="#name-prerequisites" class="internal xref">Prerequisites</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.2">
+                <p id="section-toc.1-1.4.2.2.1"><a href="#section-4.2" class="auto internal xref">4.2</a>.  <a href="#name-trust-chain-from-verifier-t" class="internal xref">Trust Chain from Verifier to Issuer</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.2.2.1">
+                    <p id="section-toc.1-1.4.2.2.2.1.1"><a href="#section-4.2.1" class="auto internal xref">4.2.1</a>.  <a href="#name-requirements-on-issuance" class="internal xref">Requirements on Issuance</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.2.2.2">
+                    <p id="section-toc.1-1.4.2.2.2.2.1"><a href="#section-4.2.2" class="auto internal xref">4.2.2</a>.  <a href="#name-requirements-on-presentatio" class="internal xref">Requirements on Presentation Process</a></p>
+</li>
+                </ul>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.3">
+                <p id="section-toc.1-1.4.2.3.1"><a href="#section-4.3" class="auto internal xref">4.3</a>.  <a href="#name-holder-binding" class="internal xref">Holder Binding</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.4">
+                <p id="section-toc.1-1.4.2.4.1"><a href="#section-4.4" class="auto internal xref">4.4</a>.  <a href="#name-ensuring-secure-storage-of-" class="internal xref">Ensuring Secure Storage of Credentials</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.4.2.1">
+                    <p id="section-toc.1-1.4.2.4.2.1.1"><a href="#section-4.4.1" class="auto internal xref">4.4.1</a>.  <a href="#name-direct-model" class="internal xref">Direct Model</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.4.2.2">
+                    <p id="section-toc.1-1.4.2.4.2.2.1"><a href="#section-4.4.2" class="auto internal xref">4.4.2</a>.  <a href="#name-indirect-model" class="internal xref">Indirect Model</a></p>
+</li>
+                </ul>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.5">
+                <p id="section-toc.1-1.4.2.5.1"><a href="#section-4.5" class="auto internal xref">4.5</a>.  <a href="#name-end-users-perspective" class="internal xref">End-User's Perspective</a></p>
+</li>
+            </ul>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5">
+            <p id="section-toc.1-1.5.1"><a href="#section-5" class="auto internal xref">5</a>.  <a href="#name-fulfilling-security-and-pri" class="internal xref">Fulfilling Security and Privacy Requirements</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.1">
+                <p id="section-toc.1-1.5.2.1.1"><a href="#section-5.1" class="auto internal xref">5.1</a>.  <a href="#name-credential-format" class="internal xref">Credential Format</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.2">
+                <p id="section-toc.1-1.5.2.2.1"><a href="#section-5.2" class="auto internal xref">5.2</a>.  <a href="#name-trust-framework" class="internal xref">Trust Framework</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.3">
+                <p id="section-toc.1-1.5.2.3.1"><a href="#section-5.3" class="auto internal xref">5.3</a>.  <a href="#name-protocol" class="internal xref">Protocol</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.4">
+                <p id="section-toc.1-1.5.2.4.1"><a href="#section-5.4" class="auto internal xref">5.4</a>.  <a href="#name-verifier" class="internal xref">Verifier</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.5">
+                <p id="section-toc.1-1.5.2.5.1"><a href="#section-5.5" class="auto internal xref">5.5</a>.  <a href="#name-wallet" class="internal xref">Wallet</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.6">
+                <p id="section-toc.1-1.5.2.6.1"><a href="#section-5.6" class="auto internal xref">5.6</a>.  <a href="#name-issuer" class="internal xref">Issuer</a></p>
+</li>
+            </ul>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6">
+            <p id="section-toc.1-1.6.1"><a href="#section-6" class="auto internal xref">6</a>.  <a href="#name-protocol-analysis-openid-fo" class="internal xref">Protocol Analysis OpenID for VC</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6.2.1">
+                <p id="section-toc.1-1.6.2.1.1"><a href="#section-6.1" class="auto internal xref">6.1</a>.  <a href="#name-attacker-model" class="internal xref">Attacker Model</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6.2.1.2.1">
+                    <p id="section-toc.1-1.6.2.1.2.1.1"><a href="#section-6.1.1" class="auto internal xref">6.1.1</a>.  <a href="#name-malicious-credential-issuer" class="internal xref">Malicious Credential Issuer Metadata Configurations</a></p>
+</li>
+                </ul>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6.2.2">
+                <p id="section-toc.1-1.6.2.2.1"><a href="#section-6.2" class="auto internal xref">6.2</a>.  <a href="#name-privacy-security-requiremen" class="internal xref">Privacy/Security Requirement P-10</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6.2.2.2.1">
+                    <p id="section-toc.1-1.6.2.2.2.1.1"><a href="#section-6.2.1" class="auto internal xref">6.2.1</a>.  <a href="#name-pre-authorized-code-grant" class="internal xref">Pre-Authorized Code Grant</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6.2.2.2.2">
+                    <p id="section-toc.1-1.6.2.2.2.2.1"><a href="#section-6.2.2" class="auto internal xref">6.2.2</a>.  <a href="#name-authorization-code-grant" class="internal xref">Authorization Code Grant</a></p>
+</li>
+                </ul>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6.2.3">
+                <p id="section-toc.1-1.6.2.3.1"><a href="#section-6.3" class="auto internal xref">6.3</a>.  <a href="#name-security-requirement-p-20" class="internal xref">Security Requirement P-20</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6.2.3.2.1">
+                    <p id="section-toc.1-1.6.2.3.2.1.1"><a href="#section-6.3.1" class="auto internal xref">6.3.1</a>.  <a href="#name-honest-credential-issuer" class="internal xref">Honest Credential Issuer</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6.2.3.2.2">
+                    <p id="section-toc.1-1.6.2.3.2.2.1"><a href="#section-6.3.2" class="auto internal xref">6.3.2</a>.  <a href="#name-compromised-credential-issu" class="internal xref">Compromised Credential Issuer</a></p>
+</li>
+                </ul>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6.2.4">
+                <p id="section-toc.1-1.6.2.4.1"><a href="#section-6.4" class="auto internal xref">6.4</a>.  <a href="#name-security-requirement-p-30" class="internal xref">Security Requirement P-30</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6.2.5">
+                <p id="section-toc.1-1.6.2.5.1"><a href="#section-6.5" class="auto internal xref">6.5</a>.  <a href="#name-security-requirement-p-40" class="internal xref">Security Requirement P-40</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6.2.5.2.1">
+                    <p id="section-toc.1-1.6.2.5.2.1.1"><a href="#section-6.5.1" class="auto internal xref">6.5.1</a>.  <a href="#name-same-device-flow" class="internal xref">Same-Device Flow</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6.2.5.2.2">
+                    <p id="section-toc.1-1.6.2.5.2.2.1"><a href="#section-6.5.2" class="auto internal xref">6.5.2</a>.  <a href="#name-cross-device-flow" class="internal xref">Cross-Device Flow</a></p>
+</li>
+                </ul>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6.2.6">
+                <p id="section-toc.1-1.6.2.6.1"><a href="#section-6.6" class="auto internal xref">6.6</a>.  <a href="#name-security-requirement-p-41" class="internal xref">Security Requirement P-41</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6.2.7">
+                <p id="section-toc.1-1.6.2.7.1"><a href="#section-6.7" class="auto internal xref">6.7</a>.  <a href="#name-security-requirement-p-50" class="internal xref">Security Requirement P-50</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6.2.8">
+                <p id="section-toc.1-1.6.2.8.1"><a href="#section-6.8" class="auto internal xref">6.8</a>.  <a href="#name-security-privacy-requiremen" class="internal xref">Security/Privacy Requirement P-60</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6.2.9">
+                <p id="section-toc.1-1.6.2.9.1"><a href="#section-6.9" class="auto internal xref">6.9</a>.  <a href="#name-security-privacy-requirement" class="internal xref">Security/Privacy Requirement P-70</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6.2.10">
+                <p id="section-toc.1-1.6.2.10.1"><a href="#section-6.10" class="auto internal xref">6.10</a>. <a href="#name-privacy-requirement-p-80" class="internal xref">Privacy Requirement P-80</a></p>
+</li>
+            </ul>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7">
+            <p id="section-toc.1-1.7.1"><a href="#section-7" class="auto internal xref">7</a>.  <a href="#name-normative-references" class="internal xref">Normative References</a></p>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8">
+            <p id="section-toc.1-1.8.1"><a href="#section-8" class="auto internal xref">8</a>.  <a href="#name-informative-references" class="internal xref">Informative References</a></p>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.9">
+            <p id="section-toc.1-1.9.1"><a href="#appendix-A" class="auto internal xref"></a><a href="#name-authors-addresses" class="internal xref">Authors' Addresses</a></p>
+</li>
+        </ul>
+</nav>
+</section>
+</div>
+<div id="introduction">
+<section id="section-1">
+      <h2 id="name-introduction">
+<a href="#section-1" class="section-number selfRef">1. </a><a href="#name-introduction" class="section-name selfRef">Introduction</a>
+      </h2>
+<p id="section-1-1"><strong>Note:</strong> This document is a work in progress. The security and trust
+considerations described here are not yet complete and may change
+without notice. The security analysis has not yet been verified by
+formal methods.<a href="#section-1-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="terminology">
+<section id="section-2">
+      <h2 id="name-terminology">
+<a href="#section-2" class="section-number selfRef">2. </a><a href="#name-terminology" class="section-name selfRef">Terminology</a>
+      </h2>
+<p id="section-2-1"><strong>TODO: Check if all of the following terms are actually used and aligned with latest drafts.</strong><a href="#section-2-1" class="pilcrow">¶</a></p>
+<p id="section-2-2">This specification uses the terms "Access Token", "Authorization
+Request", "Authorization Response", "Authorization Server", "Client",
+"Client Authentication", "Client Identifier", "Grant Type", "Response
+Type", "Token Request" and "Token Response" defined by OAuth 2.0
+<span>[<a href="#RFC6749" class="cite xref">RFC6749</a>]</span>, the terms "End-User", "Entity", "Request Object", "Request
+URI" as defined by OpenID Connect Core <span>[<a href="#OpenID.Core" class="cite xref">OpenID.Core</a>]</span>, the term "JSON
+Web Token (JWT)" defined by JSON Web Token (JWT) <span>[<a href="#RFC7519" class="cite xref">RFC7519</a>]</span>, the term
+"JOSE Header" and the term "Base64url Encoding" defined by JSON Web
+Signature (JWS) <span>[<a href="#RFC7515" class="cite xref">RFC7515</a>]</span>, and the term "Response Mode" defined by
+OAuth 2.0 Multiple Response Type Encoding Practices <span>[<a href="#OAuth.Responses" class="cite xref">OAuth.Responses</a>]</span>.<a href="#section-2-2" class="pilcrow">¶</a></p>
+<p id="section-2-3">This specification also uses the following terms defined in <span>[<a href="#OpenID.VP" class="cite xref">OpenID.VP</a>]</span> and <span>[<a href="#OpenID.VCI" class="cite xref">OpenID.VCI</a>]</span>.<a href="#section-2-3" class="pilcrow">¶</a></p>
+<span class="break"></span><dl class="dlParallel" id="section-2-4">
+        <dt id="section-2-4.1">Credential:</dt>
+        <dd style="margin-left: 1.5em" id="section-2-4.2">A set of one or more claims about a subject made by a Credential Issuer. Note that this definition of a term "Credential" in this specification is different from that in <span>[<a href="#OpenID.Core" class="cite xref">OpenID.Core</a>]</span>.<a href="#section-2-4.2" class="pilcrow">¶</a>
+</dd>
+        <dd class="break"></dd>
+<dt id="section-2-4.3">Verifiable Credential (VC):</dt>
+        <dd style="margin-left: 1.5em" id="section-2-4.4">An Issuer-signed Credential whose authenticity can be cryptographically verified. Can be of any format used in the Issuer-Holder-Verifier Model, including, but not limited to those defined in <span>[<a href="#VC_DATA" class="cite xref">VC_DATA</a>]</span>, <span>[<a href="#ISO.18013-5" class="cite xref">ISO.18013-5</a>]</span> (mdoc) and <span>[<a href="#Hyperledger.Indy" class="cite xref">Hyperledger.Indy</a>]</span> (AnonCreds).<a href="#section-2-4.4" class="pilcrow">¶</a>
+</dd>
+        <dd class="break"></dd>
+<dt id="section-2-4.5">Presentation:</dt>
+        <dd style="margin-left: 1.5em" id="section-2-4.6">Data that is shared with a specific Verifier, derived from one or more Verifiable Credentials that can be from the same or different issuers.<a href="#section-2-4.6" class="pilcrow">¶</a>
+</dd>
+        <dd class="break"></dd>
+<dt id="section-2-4.7">Verifiable Presentation (VP):</dt>
+        <dd style="margin-left: 1.5em" id="section-2-4.8">A Holder-signed Credential whose authenticity can be cryptographically verified to provide Cryptographic Holder Binding. Can be of any format used in the Issuer-Holder-Verifier Model, including, but not limited to those defined in <span>[<a href="#VC_DATA" class="cite xref">VC_DATA</a>]</span>, <span>[<a href="#ISO.18013-5" class="cite xref">ISO.18013-5</a>]</span> (mdoc) and <span>[<a href="#Hyperledger.Indy" class="cite xref">Hyperledger.Indy</a>]</span> (AnonCreds).<a href="#section-2-4.8" class="pilcrow">¶</a>
+</dd>
+        <dd class="break"></dd>
+<dt id="section-2-4.9">Credential Issuer:</dt>
+        <dd style="margin-left: 1.5em" id="section-2-4.10">An entity that issues Verifiable Credentials. Also called Issuer.<a href="#section-2-4.10" class="pilcrow">¶</a>
+</dd>
+        <dd class="break"></dd>
+<dt id="section-2-4.11">Holder:</dt>
+        <dd style="margin-left: 1.5em" id="section-2-4.12">An entity that receives Verifiable Credentials and has control over them to present them to the Verifiers as Verifiable Presentations.<a href="#section-2-4.12" class="pilcrow">¶</a>
+</dd>
+        <dd class="break"></dd>
+<dt id="section-2-4.13">Verifier:</dt>
+        <dd style="margin-left: 1.5em" id="section-2-4.14">An entity that requests, receives and validates Verifiable Presentations. During presentation of Credentials, Verifier acts as an OAuth 2.0 Client towards the Wallet that is acting as an OAuth 2.0 Authorization Server. The Verifier is a specific case of OAuth 2.0 Client, just like Relying Party (RP) in <span>[<a href="#OpenID.Core" class="cite xref">OpenID.Core</a>]</span>.<a href="#section-2-4.14" class="pilcrow">¶</a>
+</dd>
+        <dd class="break"></dd>
+<dt id="section-2-4.15">Issuer-Holder-Verifier Model:</dt>
+        <dd style="margin-left: 1.5em" id="section-2-4.16">A model for claims sharing where claims are issued in the form of Verifiable Credentials independent of the process of presenting them as Verifiable Presentation to the Verifiers. An issued Verifiable Credential can (but must not necessarily) be used multiple times.<a href="#section-2-4.16" class="pilcrow">¶</a>
+</dd>
+        <dd class="break"></dd>
+<dt id="section-2-4.17">Holder Binding:</dt>
+        <dd style="margin-left: 1.5em" id="section-2-4.18">Ability of the Holder to prove legitimate possession of a Verifiable Credential.<a href="#section-2-4.18" class="pilcrow">¶</a>
+</dd>
+        <dd class="break"></dd>
+<dt id="section-2-4.19">Wallet:</dt>
+        <dd style="margin-left: 1.5em" id="section-2-4.20">An entity used by the Holder to receive, store, present, and manage Verifiable Credentials and key material. There is no single deployment model of a Wallet: Verifiable Credentials and keys can both be stored/managed locally, or by using a remote self-hosted service, or a remote third-party service. In the context of this specification, the Wallet acts as an OAuth 2.0 Authorization Server (see <span>[<a href="#RFC6749" class="cite xref">RFC6749</a>]</span>) towards the Credential Verifier which acts as the OAuth 2.0 Client.<a href="#section-2-4.20" class="pilcrow">¶</a>
+</dd>
+      <dd class="break"></dd>
+</dl>
+</section>
+</div>
+<div id="trust-model">
+<section id="section-3">
+      <h2 id="name-trust-model">
+<a href="#section-3" class="section-number selfRef">3. </a><a href="#name-trust-model" class="section-name selfRef">Trust Model</a>
+      </h2>
+<p id="section-3-1">Verifiable Credentials facilitate a model to obtain and
+present authoritative claims about a subject via a so-called Wallet (Issuer-Holder-Verifier Model).<a href="#section-3-1" class="pilcrow">¶</a></p>
+<p id="section-3-2"><strong>TODO: add diagram</strong><a href="#section-3-2" class="pilcrow">¶</a></p>
+<p id="section-3-3">In this model, the Issuer (the entity making an authoritative claim) creates a
+Verifiable Credential and delivers it to the End-User (or her Wallet,
+respectively). The Wallet/End-User can then present the Verifiable Credential to
+a Verifier (the entity that needs to know the claim).<a href="#section-3-3" class="pilcrow">¶</a></p>
+<p id="section-3-4">A Credential can be presented multiple times during its lifecycle and multiple
+Credentials can be presented to a Verifier in a single transaction. Subsets of
+the claims in one or more credentials can be presented.<a href="#section-3-4" class="pilcrow">¶</a></p>
+<p id="section-3-5">The End-User then decides what Credential to use with which Verifier. The
+Verifier decides what Credential to accept from the End-User.<a href="#section-3-5" class="pilcrow">¶</a></p>
+<p id="section-3-6">The involved parties need to access data about identifiers, keys, and
+Credentials as well as data about the acting parties themselves in order to
+securely implement the Credential exchange. The details of how this is achieved
+are defined in the Trust Model.<a href="#section-3-6" class="pilcrow">¶</a></p>
+<p id="section-3-7">All parties communicate with each other using a set of protocols, or just
+"protocol" in the following. In the case of OpenID4VP, the protocols are OpenID
+for Verifiable Credential Issuance <span>[<a href="#OpenID.VCI" class="cite xref">OpenID.VCI</a>]</span> and OpenID for Verifiable
+Presentations <span>[<a href="#OpenID.VP" class="cite xref">OpenID.VP</a>]</span>, with an optional use of SIOP v2 <span>[<a href="#OpenID.SIOPv2" class="cite xref">OpenID.SIOPv2</a>]</span>.<a href="#section-3-7" class="pilcrow">¶</a></p>
+<div id="trust-in-the-issuer-holder-verifier-model">
+<section id="section-3.1">
+        <h3 id="name-trust-in-the-issuer-holder-">
+<a href="#section-3.1" class="section-number selfRef">3.1. </a><a href="#name-trust-in-the-issuer-holder-" class="section-name selfRef">Trust in the Issuer-Holder-Verifier Model</a>
+        </h3>
+<p id="section-3.1-1">Trust in the Issuer-Holder-Verifier Model means different things to
+different parties.<a href="#section-3.1-1" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-3.1-2.1">
+            <p id="section-3.1-2.1.1"><strong>For Verifiers:</strong><a href="#section-3.1-2.1.1" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-3.1-2.1.2.1">
+                <strong>Issuer Identification:</strong> The Verifier can identify the Issuer to
+such a degree that it can trust that the Issuer is the entity it
+claims to be.<a href="#section-3.1-2.1.2.1" class="pilcrow">¶</a>
+</li>
+              <li class="normal" id="section-3.1-2.1.2.2">
+                <strong>Authenticity of Claims:</strong> A Verifier can trust that the set of
+presented claims was correctly issued by a specific Issuer and not
+altered by the Holder or a malicious party.<a href="#section-3.1-2.1.2.2" class="pilcrow">¶</a>
+</li>
+              <li class="normal" id="section-3.1-2.1.2.3">
+                <strong>Identity of Holder:</strong> A Verifier can trust that the party
+presenting the claims in a session with the Verifier is
+(controlled by) the subject of the claims. If this assurance is
+required, it is typically achieved by enforcing Holder Binding and
+trusting the Issuer to issue Credentials only to the End-Users
+they are about (see below).<a href="#section-3.1-2.1.2.3" class="pilcrow">¶</a>
+</li>
+              <li class="normal" id="section-3.1-2.1.2.4">
+                <strong>Integrity of Interaction:</strong> When interacting with a Wallet, the
+Verifier can trust that it receives whatever data this Holder
+wants to release for the specific session, not forged data from a
+third party and not data from a different session with the same
+Holder.<a href="#section-3.1-2.1.2.4" class="pilcrow">¶</a>
+</li>
+            </ul>
+</li>
+          <li class="normal" id="section-3.1-2.2">
+            <p id="section-3.1-2.2.1"><strong>For Holders/End-Users:</strong><a href="#section-3.1-2.2.1" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-3.1-2.2.2.1">
+                <strong>Privacy (I):</strong> A Holder can trust that no party learns any
+claims except Verifiers to whom the Holder has explicitly released
+the claims.<a href="#section-3.1-2.2.2.1" class="pilcrow">¶</a>
+</li>
+              <li class="normal" id="section-3.1-2.2.2.2">
+                <strong>Privacy (II):</strong> A Holder can trust that a Verifier only learns the
+claims that it intends to release to the Verifier and not more.<a href="#section-3.1-2.2.2.2" class="pilcrow">¶</a>
+</li>
+              <li class="normal" id="section-3.1-2.2.2.3">
+                <strong>Context (incl. Verifier Identification):</strong> A Holder, when presenting Credentials, can identify
+which Verifier receives the data and for which session the data is
+released (if there is more than one).<a href="#section-3.1-2.2.2.3" class="pilcrow">¶</a>
+</li>
+              <li class="normal" id="section-3.1-2.2.2.4">
+                <strong>Correctness of Claims:</strong> A Holder can trust that the claims in a
+Credential are correct and not modified by a
+malicious party.<a href="#section-3.1-2.2.2.4" class="pilcrow">¶</a>
+</li>
+            </ul>
+</li>
+          <li class="normal" id="section-3.1-2.3">
+            <p id="section-3.1-2.3.1"><strong>For Issuers:</strong><a href="#section-3.1-2.3.1" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-3.1-2.3.2.1">
+                <strong>Wallet Integrity:</strong> For the protection of the issuer-created Credentials,
+the issuer trusts that Wallet does not misuse the data of the user.<a href="#section-3.1-2.3.2.1" class="pilcrow">¶</a>
+</li>
+            </ul>
+</li>
+        </ul>
+</section>
+</div>
+<div id="trust-and-holder-binding">
+<section id="section-3.2">
+        <h3 id="name-trust-and-holder-binding">
+<a href="#section-3.2" class="section-number selfRef">3.2. </a><a href="#name-trust-and-holder-binding" class="section-name selfRef">Trust and Holder Binding</a>
+        </h3>
+<p id="section-3.2-1">Depending on the use case, the Verifier needs to trust the End-User
+to be the legitimate holder of a certain Credential. Accepting a
+Credential from any bearer is a security risk:<a href="#section-3.2-1" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-3.2-2.1">A malicious party that has gained access to a Credential (e.g., data
+leaked from a connection or from a Verifier) can present it to a
+Verifier and thus impersonate the legitimate End-User.<a href="#section-3.2-2.1" class="pilcrow">¶</a>
+</li>
+          <li class="normal" id="section-3.2-2.2">A Verifier that acts in a benign way towards an End-User but misuses
+the presented Credentials can impersonate a legitimate End-User.<a href="#section-3.2-2.2" class="pilcrow">¶</a>
+</li>
+        </ul>
+<p id="section-3.2-3">So anyone getting in possession of a Credential, e.g. through a security
+breach, could pose as the legitimate End-User for a long time.<a href="#section-3.2-3" class="pilcrow">¶</a></p>
+<p id="section-3.2-4">Therefore, Credentials are usually bound to the legitimate End-User,
+also known as "holder binding". There are three ways to bind the
+Credential to its legitimate holder:<a href="#section-3.2-4" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-3.2-5.1">
+            <strong>Biometric Holder Binding</strong>, e.g., via a passport photo. This method
+is well known from physical Credentials such as passports or id
+cards. During presentation, the Verifier compares the data in the
+Credential with the respective biometric traits of the presenter.<a href="#section-3.2-5.1" class="pilcrow">¶</a>
+</li>
+          <li class="normal" id="section-3.2-5.2">
+            <strong>Claim-based Binding</strong> via holder-related claims. E.g. a diploma
+might be bound to a person named "Erika Mustermann". This binding
+requires a primary Credential to prove the presenter's identity which
+in turn is bound to the legitimate holder using either biometric or
+cryptographic holder binding or both.<a href="#section-3.2-5.2" class="pilcrow">¶</a>
+</li>
+          <li class="normal" id="section-3.2-5.3">
+            <strong>Cryptographic Binding</strong>, i.e., the Credential is directly or
+indirectly bound to key material under the control of the legitimate
+holder. Only if the presenter can prove possession of the private key
+material, it is considered the legitimate holder of that Credential.
+Cryptographic binding is well suited for digital use cases and is
+more privacy preserving than biometric or claims-based binding since
+no or few (arbitrary) PII is required in order to implement the
+binding.<a href="#section-3.2-5.3" class="pilcrow">¶</a>
+</li>
+        </ul>
+<div id="holder-binding-vs-holder-identification">
+<section id="section-3.2.1">
+          <h4 id="name-holder-binding-vs-holder-id">
+<a href="#section-3.2.1" class="section-number selfRef">3.2.1. </a><a href="#name-holder-binding-vs-holder-id" class="section-name selfRef">Holder Binding vs. Holder Identification</a>
+          </h4>
+<p id="section-3.2.1-1">It is often assumed that the Holder of a Credential is the subject of
+the Credential. Depending on the ecosystem and types of credentials,
+this might not always be the case, e.g., when a parent presents a
+child's birth certificate to a school. In this case, the Holder and
+legitimate possessor is the parent and the subject is the child.<a href="#section-3.2.1-1" class="pilcrow">¶</a></p>
+<p id="section-3.2.1-2">At least in theory, a credential can also hold information about
+multiple subjects.<a href="#section-3.2.1-2" class="pilcrow">¶</a></p>
+<p id="section-3.2.1-3">It is therefore important to distinguish between the information that
+the credential holds (about the subject) and the information that the
+credential is bound to (about the holder). For example, a given name and
+family name may be contained in a credential to be used for claim-based
+binding, even though the credential itself does not attest to the
+holder's identity.<a href="#section-3.2.1-3" class="pilcrow">¶</a></p>
+<p id="section-3.2.1-4">When it is ensured that the credential is bound to the subject of the
+credential, and Holder Binding is enforced, Verifiers can trust that the
+presentation of a credential is done by the subject of the credential.<a href="#section-3.2.1-4" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="holder-binding-and-reuse-of-credentials">
+<section id="section-3.2.2">
+          <h4 id="name-holder-binding-and-reuse-of">
+<a href="#section-3.2.2" class="section-number selfRef">3.2.2. </a><a href="#name-holder-binding-and-reuse-of" class="section-name selfRef">Holder Binding and Reuse of Credentials</a>
+          </h4>
+<p id="section-3.2.2-1"><strong>Cryptographic holder binding</strong> allows a Verifier to challenge the Holder
+to prove possession of the private key material. This is usually done by
+the Verifier sending a random nonce to the Holder and the Holder signing
+the nonce with the private key material. The Verifier can then verify
+the signature with the public key material contained in the Credential.
+The challenge must be augmented by the Verifier's identity to prevent
+replay attacks where an attacker, acting as a Verifier, can reuse a
+nonce from a session with a different Verifier running in parallel.<a href="#section-3.2.2-1" class="pilcrow">¶</a></p>
+<p id="section-3.2.2-2"><strong>Note:</strong> The nonce challenge at the same time serves as a CSRF
+protection. However, if cryptographic holder binding is not used, the
+nonce challenge cannot serve this function. Details are described in
+<a href="#security-requirement-p-30" class="auto internal xref">Section 6.4</a>.<a href="#section-3.2.2-2" class="pilcrow">¶</a></p>
+<p id="section-3.2.2-3"><strong>Biometric holder binding</strong> requires the Verifier to compare the
+biometric traits of the presenter with the biometric traits contained in
+the Credential. There is no built-in mechanism to ensure that prevents
+replay attacks: An attacker can attempt to forward not only a stolen
+credential, but also the biometric information of the legitimate holder,
+e.g., by replaying a video of the legitimate holder. Out-of-band
+mechanisms must be used to prevent such attacks, for example, by only
+accepting biometric data from trusted platforms or by challenging users
+to perform specific actions.<a href="#section-3.2.2-3" class="pilcrow">¶</a></p>
+<p id="section-3.2.2-4"><strong>Claim-based holder binding</strong> requires the Verifier to compare the
+claims contained in the Credential with claims form another source,
+usually a second credential or previously known information. As such, a
+credential that is only bound using claim-based information is not
+itself protected against replay attacks, but may be useless unless
+presented in conjunction with another credential that is holder-bound.<a href="#section-3.2.2-4" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="enforcing-holder-binding">
+<section id="section-3.2.3">
+          <h4 id="name-enforcing-holder-binding">
+<a href="#section-3.2.3" class="section-number selfRef">3.2.3. </a><a href="#name-enforcing-holder-binding" class="section-name selfRef">Enforcing Holder Binding</a>
+          </h4>
+<p id="section-3.2.3-1">Verifiers MUST decide whether Holder Binding is required for a
+particular use case or not before verifying a credential. This decision
+can be informed by various factors including, but not limited to the
+following: business requirements, the use case, the type of binding
+between a Holder and its credential that is required for a use case, the
+sensitivity of the use case, the expected properties of a credential,
+the type and contents of other credentials expected to be presented at
+the same time, etc.<a href="#section-3.2.3-1" class="pilcrow">¶</a></p>
+<p id="section-3.2.3-2">This can be showcased based on two scenarios for a mobile driver's
+license:<a href="#section-3.2.3-2" class="pilcrow">¶</a></p>
+<p id="section-3.2.3-3"><em>Scenario A:</em> For the verification of the driver's license when stopped
+by a police officer for exceeding a speed limit, Holder Binding may be
+necessary to ensure that the person driving the car and presenting the
+license is the actual Holder of the license. The Verifier (e.g., the
+software used by the police officer) will ensure that a Holder Binding
+proof is present and signed with the Holder's private key. (Biometric or Claims-based
+Holder Binding may be used as well, e.g., by including a portrait image or a first name,
+last name and a date of birth that matches that of an insurance policy
+paper.)<a href="#section-3.2.3-3" class="pilcrow">¶</a></p>
+<p id="section-3.2.3-4"><em>Scenario B:</em> A rental car agency may want to ensure, for insurance
+purposes, that all drivers named on the rental contract own a
+government-issued driver's license. The signer of the rental contract
+can present the mobile driver's license of all named drivers. In this
+case, the rental car agency does not need to check Holder Binding as the
+goal is not to verify the identity of the person presenting the license,
+but to verify that a license exists and is valid.<a href="#section-3.2.3-4" class="pilcrow">¶</a></p>
+<p id="section-3.2.3-5">It is important that a Verifier does not make its security policy
+decisions based on data that can be influenced by an attacker or that
+can be misinterpreted. For this reason, when deciding whether Holder
+binding is required or not, Verifiers MUST NOT take into account
+whether an Holder Binding proof was presented or not, as an attacker can
+remove the Holder Binding proof from a Presentation and present it to
+the Verifier.<a href="#section-3.2.3-5" class="pilcrow">¶</a></p>
+<p id="section-3.2.3-6"><strong>Open Question:</strong> Should a "presentation" always mean/require
+cryptographic holder binding? Should these use cases where it is not
+required covered by the protocol?<a href="#section-3.2.3-6" class="pilcrow">¶</a></p>
+</section>
+</div>
+</section>
+</div>
+<div id="note-on-storage-of-credentials">
+<section id="section-3.3">
+        <h3 id="name-storage-of-credentials-and-">
+<a href="#section-3.3" class="section-number selfRef">3.3. </a><a href="#name-storage-of-credentials-and-" class="section-name selfRef">Storage of Credentials and Presentations</a>
+        </h3>
+<p id="section-3.3-1"><strong>TODO: Link this better to the requirements above.</strong><a href="#section-3.3-1" class="pilcrow">¶</a></p>
+<p id="section-3.3-2">Wherever End-User data is stored, it represents a potential target for
+an attacker. This target can be of particularly high value when the data
+is signed by a trusted authority like an official national identity
+service. For example, in OpenID Connect, signed ID Tokens can be stored
+by Relying Parties. In the Issuer-Holder-Verifier model, Wallets have to
+store signed credentials and associated data, and Issuers and Verifiers
+may decide to store credentials or presentation as well.<a href="#section-3.3-2" class="pilcrow">¶</a></p>
+<p id="section-3.3-3">Not surprisingly, a leak of such data risks revealing private data of
+End-Users to third parties. Signed End-User data, the authenticity of
+which can be easily verified by third parties, further exacerbates the
+risk. Leaked credentials or presentations may also allow attackers to
+impersonate Holders unless Holder Binding is enforced and the attacker
+does not have access to the Holder's cryptographic keys. Altogether,
+leaked credentials and presentations may have a high monetary value on
+black markets and a leak may have a severe impact on the affected users.<a href="#section-3.3-3" class="pilcrow">¶</a></p>
+<p id="section-3.3-4">Due to these risks, systems implementing the Issuer-Holder-Verifier
+model SHOULD be designed to minimize the amount of data that is stored.
+All involved parties SHOULD store credentials or presentations only for
+as long as needed, including in log files.<a href="#section-3.3-4" class="pilcrow">¶</a></p>
+<p id="section-3.3-5">Issuers SHOULD NOT store credentials after issuance.<a href="#section-3.3-5" class="pilcrow">¶</a></p>
+<p id="section-3.3-6">Holders SHOULD store credentials and associated data only in encrypted
+form, and, wherever possible, use hardware-backed encryption in
+particular for private Holder Binding keys. Decentralized storage of
+data, e.g., on End-User devices, SHOULD be preferred for End-User
+credentials over centralized storage. Expired credentials and associated
+data SHOULD be deleted as soon as possible.<a href="#section-3.3-6" class="pilcrow">¶</a></p>
+<p id="section-3.3-7">Verifiers SHOULD NOT store presentations after verification. It may be
+sufficient to store the result of the verification and any End-User data
+that is needed for the application.<a href="#section-3.3-7" class="pilcrow">¶</a></p>
+</section>
+</div>
+</section>
+</div>
+<div id="security-and-privacy-requirements">
+<section id="section-4">
+      <h2 id="name-security-and-privacy-requir">
+<a href="#section-4" class="section-number selfRef">4. </a><a href="#name-security-and-privacy-requir" class="section-name selfRef">Security and Privacy Requirements</a>
+      </h2>
+<p id="section-4-1">To implement a secure trust chain, a number of Security and Privacy
+Requirements must be met. In the following, the Security Requirements
+are described along the trust chain from Verifier to Issuer, then
+separately from the view of the End-User. All requirements are numbered
+for reference and are prefixed with the respective party or component
+that needs to implement the requirement:<a href="#section-4-1" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-4-2.1">V: Verifier<a href="#section-4-2.1" class="pilcrow">¶</a>
+</li>
+        <li class="normal" id="section-4-2.2">I: Issuer<a href="#section-4-2.2" class="pilcrow">¶</a>
+</li>
+        <li class="normal" id="section-4-2.3">
+          <p id="section-4-2.3.1">W: Wallet<a href="#section-4-2.3.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="section-4-2.4">
+          <p id="section-4-2.4.1">CF: Credential Format<a href="#section-4-2.4.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="section-4-2.5">
+          <p id="section-4-2.5.1">E: Ecosystem<a href="#section-4-2.5.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="section-4-2.6">
+          <p id="section-4-2.6.1">P: Protocols (both for Issuance and Verification)<a href="#section-4-2.6.1" class="pilcrow">¶</a></p>
+</li>
+      </ul>
+<p id="section-4-3">Ecosystem here refers to a network of Verifiers, Issuers, and Wallets
+and the design of relationships of parties with each other in this
+network, their roles and permissions, the verification of their
+real-world identities and the mechanisms selected and provided for key
+creation and distribution.<a href="#section-4-3" class="pilcrow">¶</a></p>
+<div id="prerequisites">
+<section id="section-4.1">
+        <h3 id="name-prerequisites">
+<a href="#section-4.1" class="section-number selfRef">4.1. </a><a href="#name-prerequisites" class="section-name selfRef">Prerequisites</a>
+        </h3>
+<p id="section-4.1-1">As a prerequisite for operating in an Verifiable Credential ecosystem,
+Verifier, Issuer and Wallet need to implement the protocols and the
+credential formats securely and correctly, that is, according to the
+respective specifications, respecting the security and privacy
+requirements of the specifications, and following the best practices for
+application security.<a href="#section-4.1-1" class="pilcrow">¶</a></p>
+<p id="section-4.1-2">This includes, for example, the use of secure implementations of
+cryptographic algorithms, the proper verification of signatures and
+credentials wherever required by the protocols or credential formats,
+the use of secure random number generators, the secure use of
+hardware-based storage, and protection against injection attacks.<a href="#section-4.1-2" class="pilcrow">¶</a></p>
+<blockquote id="section-4.1-3">
+          <p id="section-4.1-3.1"><strong>Security Requirement V-00:</strong> The Verifier must implement the
+protocol securely and correctly.<a href="#section-4.1-3.1" class="pilcrow">¶</a></p>
+<p id="section-4.1-3.2"><strong>Security Requirement V-01:</strong> The Verifier must implement the
+credential format securely and correctly.<a href="#section-4.1-3.2" class="pilcrow">¶</a></p>
+<p id="section-4.1-3.3"><strong>Security Requirement I-00:</strong> The Issuer must implement the protocol
+securely and correctly.<a href="#section-4.1-3.3" class="pilcrow">¶</a></p>
+<p id="section-4.1-3.4"><strong>Security Requirement I-01:</strong> The Issuer must implement the
+credential format securely and correctly.<a href="#section-4.1-3.4" class="pilcrow">¶</a></p>
+<p id="section-4.1-3.5"><strong>Security Requirement W-00:</strong> The Wallet must implement the protocol
+securely and correctly.<a href="#section-4.1-3.5" class="pilcrow">¶</a></p>
+<p id="section-4.1-3.6"><strong>Security Requirement W-01:</strong> The Wallet must implement the
+credential format securely and correctly.<a href="#section-4.1-3.6" class="pilcrow">¶</a></p>
+</blockquote>
+</section>
+</div>
+<div id="trust-chain-from-verifier-to-issuer">
+<section id="section-4.2">
+        <h3 id="name-trust-chain-from-verifier-t">
+<a href="#section-4.2" class="section-number selfRef">4.2. </a><a href="#name-trust-chain-from-verifier-t" class="section-name selfRef">Trust Chain from Verifier to Issuer</a>
+        </h3>
+<p id="section-4.2-1">The Verifier receives a presentation that is cryptographically tied to a
+credential that itself is cryptographically tied to a specific
+Credential Issuer. One of the most basic security requirements is that
+the Verifier can verify that the presentation is tied to the correct
+Issuer.<a href="#section-4.2-1" class="pilcrow">¶</a></p>
+<blockquote id="section-4.2-2">
+          <p id="section-4.2-2.1"><strong>Security Requirement CF-10/E-10:</strong> For any presentation, the
+credential format and trust framework must be designed such that there
+is a secure way to determine the Issuer and to check that the original
+credential was issued by this issuer. (E.g., by using a cryptographic
+signature.)<a href="#section-4.2-2.1" class="pilcrow">¶</a></p>
+</blockquote>
+<p id="section-4.2-3">The data within the credential must be protected against tampering by
+an attacker. The Verifier must be able to verify that the data in the
+presentation is the same as the data in the original credential.<a href="#section-4.2-3" class="pilcrow">¶</a></p>
+<blockquote id="section-4.2-4">
+          <p id="section-4.2-4.1"><strong>Security Requirement CF-20:</strong> For any presentation, the credential
+format must ensure that the data contained therein that is tied to the
+original credential cannot be not altered. (E.g., by using a
+cryptographic signature.)<a href="#section-4.2-4.1" class="pilcrow">¶</a></p>
+</blockquote>
+<p id="section-4.2-5">The root of trust from the perspective of a Verifier is the Credential
+Issuer. The Verifier decides, based on policy, regulation, conformity
+assessment, and/or contracts, to trust a certain Issuer to issue
+Credentials of a certain type with the correct data to the legitimate
+End-Users. This requires that the Issuer is identified uniquely and
+unambiguously.<a href="#section-4.2-5" class="pilcrow">¶</a></p>
+<blockquote id="section-4.2-6">
+          <p id="section-4.2-6.1"><strong>Security Requirement E-20:</strong> The trust framework must ensure that the
+identification of an Issuer is unique and unambiguous. If there are
+multiple instances of the same Issuer sharing the same key material, the
+Verifier must trust all instances equally.<a href="#section-4.2-6.1" class="pilcrow">¶</a></p>
+</blockquote>
+<p id="section-4.2-7">For example, a mobile app as issuer which holds the key material in the app
+itself (as opposed to, e.g., a secure hardware storage) is most likely a bad
+idea - not all instances of this app are equally trustworthy, some might be
+hacked and the key material leaked to malicious parties.<a href="#section-4.2-7" class="pilcrow">¶</a></p>
+<p id="section-4.2-8">While the way in which the Verifier determines the trustworthiness of
+the Issuer defined in the trust framework is out of scope of this
+specification, this decision must not be influenced by a malicious
+party.<a href="#section-4.2-8" class="pilcrow">¶</a></p>
+<blockquote id="section-4.2-9">
+          <p id="section-4.2-9.1"><strong>Security Requirement E-30:</strong> The way in which the Verifier
+determines the trustworthiness of the Issuer defined in the trust
+framework must be secured from influence by a malicious party that can,
+for example, introduce untrustworthy entities into a directory.<a href="#section-4.2-9.1" class="pilcrow">¶</a></p>
+</blockquote>
+<p id="section-4.2-10">Any information that is used by the Verifier to determine the
+trustworthiness of the Issuer must be kept up to date. When an Issuer
+leaves the ecosystem or key material needs to be revoked or rotated,
+appropriate mechanisms must be in place.<a href="#section-4.2-10" class="pilcrow">¶</a></p>
+<blockquote id="section-4.2-11">
+          <p id="section-4.2-11.1"><strong>Security Requirement E-40:</strong> The trust framework must ensure that
+there is a way for Verifiers to keep their information on trusted
+Issuers up to date and that there is a way to revoke trust in an Issuer.<a href="#section-4.2-11.1" class="pilcrow">¶</a></p>
+</blockquote>
+<p id="section-4.2-12">The Verifier trusts in the Authenticity of Claims as described above.
+This means:<a href="#section-4.2-12" class="pilcrow">¶</a></p>
+<blockquote id="section-4.2-13">
+          <p id="section-4.2-13.1"><strong>Security Requirement I-10:</strong> The Issuer must authenticate/identify the
+End-User properly according to the requirements of the Verifier (which
+may be defined in a specification, trust framework, or by convention).<a href="#section-4.2-13.1" class="pilcrow">¶</a></p>
+</blockquote>
+<p id="section-4.2-14">The Verifier trusts in the Integrity of Claims as described above. It is
+obvious that the Issuer must not issue false claims about the End-User.<a href="#section-4.2-14" class="pilcrow">¶</a></p>
+<blockquote id="section-4.2-15">
+          <p id="section-4.2-15.1"><strong>Security Requirement I-20:</strong> The Issuer must only put correct and up-to-date
+(at the time of issuance) claims about the End-User into the Credential where
+verified data is expected.<a href="#section-4.2-15.1" class="pilcrow">¶</a></p>
+</blockquote>
+<p id="section-4.2-16">(By convention, specification or trust framework,
+self-declared or otherwise "unverified" claims may be allowed in some
+places in some credentials.)<a href="#section-4.2-16" class="pilcrow">¶</a></p>
+<div id="requirements-on-issuance">
+<section id="section-4.2.1">
+          <h4 id="name-requirements-on-issuance">
+<a href="#section-4.2.1" class="section-number selfRef">4.2.1. </a><a href="#name-requirements-on-issuance" class="section-name selfRef">Requirements on Issuance</a>
+          </h4>
+<p id="section-4.2.1-1">It must be ensured that credentials cannot be read by third parties
+during the issuance process. This ensures basic privacy of the End-User
+and prevents abuse of stolen credentials. While enforcing holder binding
+is a more secure option to prevent abuse of stolen credentials, it is
+not always desired to enforce holder binding.<a href="#section-4.2.1-1" class="pilcrow">¶</a></p>
+<blockquote id="section-4.2.1-2">
+            <p id="section-4.2.1-2.1"><strong>Privacy/Security Requirement P-10:</strong> The protocol must ensure that
+no third party can read the credential issued by the Issuer (during or after issuance).<a href="#section-4.2.1-2.1" class="pilcrow">¶</a></p>
+</blockquote>
+<p id="section-4.2.1-3">It must be ensured that an attacker cannot introduce credentials into a
+Wallet that are not intended for the End-User.<a href="#section-4.2.1-3" class="pilcrow">¶</a></p>
+<blockquote id="section-4.2.1-4">
+            <p id="section-4.2.1-4.1"><strong>Security Requirement P-20:</strong> The protocol must ensure that no third
+party can interfere with the issuance process such that the Issuer
+issues Credentials for the third party to the End-User.<a href="#section-4.2.1-4.1" class="pilcrow">¶</a></p>
+</blockquote>
+<p id="section-4.2.1-5">Finally, an Issuer that learns about potential abuse of a credential
+must be able to revoke it.<a href="#section-4.2.1-5" class="pilcrow">¶</a></p>
+<blockquote id="section-4.2.1-6">
+            <p id="section-4.2.1-6.1"><strong>Security Requirement I-30:</strong> The Issuer must be able to revoke a Credential,
+in particular once the Issuer learns about potential abuse of the Credential.<a href="#section-4.2.1-6.1" class="pilcrow">¶</a></p>
+</blockquote>
+</section>
+</div>
+<div id="requirements-on-presentation-process">
+<section id="section-4.2.2">
+          <h4 id="name-requirements-on-presentatio">
+<a href="#section-4.2.2" class="section-number selfRef">4.2.2. </a><a href="#name-requirements-on-presentatio" class="section-name selfRef">Requirements on Presentation Process</a>
+          </h4>
+<p id="section-4.2.2-1">The Verifier trusts in the Integrity of the Interaction with the Wallet,
+as described above. This means:<a href="#section-4.2.2-1" class="pilcrow">¶</a></p>
+<blockquote id="section-4.2.2-2">
+            <p id="section-4.2.2-2.1"><strong>Security Requirement P-30:</strong> The protocol must ensure that the
+interaction between the Wallet and Verifier is protected such that no
+third party can interfere with the interaction by modifying the
+information transmitted.<a href="#section-4.2.2-2.1" class="pilcrow">¶</a></p>
+</blockquote>
+<p id="section-4.2.2-3">An attacker could extract messages of the presentation process and
+forward them to an End-User. The End-User could be confused about the
+purpose of the interaction and complete the presentation process on the
+attacker's behalf, giving the attacker access to resources or a session
+that was authenticated using the End-Users identity.<a href="#section-4.2.2-3" class="pilcrow">¶</a></p>
+<blockquote id="section-4.2.2-4">
+            <p id="section-4.2.2-4.1"><strong>Security Requirement P-40:</strong> The protocol must ensure that the
+interaction between an attacker and a Verifier cannot be forwarded to
+and successfully completed by a user (victim).<a href="#section-4.2.2-4.1" class="pilcrow">¶</a></p>
+</blockquote>
+<p id="section-4.2.2-5">Likewise, an attacker interacting directly with a Verifier must not be
+able to re-use parts extracted from an End-User's session to
+successfully complete the interaction.<a href="#section-4.2.2-5" class="pilcrow">¶</a></p>
+<blockquote id="section-4.2.2-6">
+            <p id="section-4.2.2-6.1"><strong>Security Requirement P-41:</strong> The protocol must ensure that an
+attacker cannot successfully forward an interaction between a Wallet
+and a Verifier to a Verifier under his own control.<a href="#section-4.2.2-6.1" class="pilcrow">¶</a></p>
+</blockquote>
+</section>
+</div>
+</section>
+</div>
+<div id="holder-binding">
+<section id="section-4.3">
+        <h3 id="name-holder-binding">
+<a href="#section-4.3" class="section-number selfRef">4.3. </a><a href="#name-holder-binding" class="section-name selfRef">Holder Binding</a>
+        </h3>
+<p id="section-4.3-1">If Holder Binding is required by the use-case of the Verifier (see open
+questions above), the Verifier must trust the Issuer to bind
+credentials to the End-User. This means:<a href="#section-4.3-1" class="pilcrow">¶</a></p>
+<blockquote id="section-4.3-2">
+          <p id="section-4.3-2.1"><strong>Security Requirement I-40:</strong> The Issuer must only include
+holder-binding data into the credential that is tied to the actual
+End-User (and not, e.g., include a cryptographic key under control by a
+third party).<a href="#section-4.3-2.1" class="pilcrow">¶</a></p>
+</blockquote>
+<p id="section-4.3-3">It must be ensured that during issuance, the correct holder-binding data
+ends up in the credential.<a href="#section-4.3-3" class="pilcrow">¶</a></p>
+<blockquote id="section-4.3-4">
+          <p id="section-4.3-4.1"><strong>Security Requirement P-50:</strong> The protocol must ensure that third
+parties cannot interfere with the binding process.<a href="#section-4.3-4.1" class="pilcrow">¶</a></p>
+</blockquote>
+<p id="section-4.3-5">For cryptographic holder binding, the security largely depends on the
+quality of the key management, e.g. whether private keys can be
+extracted from the user's device and copied to another device. So the
+Verifier needs to trust in the Wallet to implement the key management
+securely.<a href="#section-4.3-5" class="pilcrow">¶</a></p>
+<blockquote id="section-4.3-6">
+          <p id="section-4.3-6.1"><strong>Security Requirement W-10:</strong> The Wallet must implement the key
+management for cryptographic holder binding securely such that only the
+legitimate Holder can use a credential.<a href="#section-4.3-6.1" class="pilcrow">¶</a></p>
+</blockquote>
+<p id="section-4.3-7">The precise method to achieve this depends on the software and hardware choices
+available and the desired level of security and assurance. One way to achieve
+this is by using a secure enclave or similar technology.<a href="#section-4.3-7" class="pilcrow">¶</a></p>
+<blockquote id="section-4.3-8">
+          <p id="section-4.3-8.1"><strong>Security Requirement CF-21:</strong> For cryptographic holder binding, the
+presentation format must allow requiring a Holder to prove possession of the
+private key that is bound to the credential, usually by signing over a
+challenge consisting of a nonce and an identifier for the Verifier.<a href="#section-4.3-8.1" class="pilcrow">¶</a></p>
+</blockquote>
+</section>
+</div>
+<div id="ensuring-secure-storage-of-credentials">
+<section id="section-4.4">
+        <h3 id="name-ensuring-secure-storage-of-">
+<a href="#section-4.4" class="section-number selfRef">4.4. </a><a href="#name-ensuring-secure-storage-of-" class="section-name selfRef">Ensuring Secure Storage of Credentials</a>
+        </h3>
+<p id="section-4.4-1">Ensuring secure credential storage can be achieved in one of two ways:<a href="#section-4.4-1" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-4.4-2.1">Direct: The Verifier checks the trustworthiness of the Wallet
+directly by, for example, requiring an attested key management.<a href="#section-4.4-2.1" class="pilcrow">¶</a>
+</li>
+          <li class="normal" id="section-4.4-2.2">Indirect: The Verifier trusts the Issuer to only issue credentials to
+wallets that implement the key management securely.<a href="#section-4.4-2.2" class="pilcrow">¶</a>
+</li>
+        </ul>
+<div id="direct-model">
+<section id="section-4.4.1">
+          <h4 id="name-direct-model">
+<a href="#section-4.4.1" class="section-number selfRef">4.4.1. </a><a href="#name-direct-model" class="section-name selfRef">Direct Model</a>
+          </h4>
+<blockquote id="section-4.4.1-1">
+            <p id="section-4.4.1-1.1"><strong>Security Requirement V-10 (conditional):</strong> The Verifier must ensure
+that the credential was stored in a secure Wallet.<a href="#section-4.4.1-1.1" class="pilcrow">¶</a></p>
+</blockquote>
+</section>
+</div>
+<div id="indirect-model">
+<section id="section-4.4.2">
+          <h4 id="name-indirect-model">
+<a href="#section-4.4.2" class="section-number selfRef">4.4.2. </a><a href="#name-indirect-model" class="section-name selfRef">Indirect Model</a>
+          </h4>
+<p id="section-4.4.2-1">Assuming this trust can be established by way of conformity assessment
+of some sort, the Issuer needs to make sure that it issues Credentials
+into a Wallet it trusts and the Verifier needs to make sure that it
+accepts presentations only from wallets it trusts.<a href="#section-4.4.2-1" class="pilcrow">¶</a></p>
+<p id="section-4.4.2-2">In order to make the life of Verifiers easier, this concept obliges the
+Issuer to only issue Credentials to trustworthy wallets and to make its
+requirements transparent to Verifiers via its policy so this becomes
+part of the rules a Verifier needs to understand and accept.<a href="#section-4.4.2-2" class="pilcrow">¶</a></p>
+<p id="section-4.4.2-3">From the Verifier’s standpoint it is now sufficient to ensure it accepts
+Credentials from this Issuer since, by conclusion, if it gets presented
+a valid Credential issued by this Issuer it must have come from a
+trustworthy Wallet. This change significantly simplifies the protocol
+and fosters privacy since the presentation process does not need to
+authenticate the Wallet towards the Verifier.<a href="#section-4.4.2-3" class="pilcrow">¶</a></p>
+<blockquote id="section-4.4.2-4">
+            <p id="section-4.4.2-4.1"><strong>Security Requirement I-50 (conditional):</strong> The Issuer must ensure
+that the credential was stored in a secure Wallet.<a href="#section-4.4.2-4.1" class="pilcrow">¶</a></p>
+</blockquote>
+<p id="section-4.4.2-5">Then, the Verifier must check that the Issuer actually adheres to this
+policy.<a href="#section-4.4.2-5" class="pilcrow">¶</a></p>
+<blockquote id="section-4.4.2-6">
+            <p id="section-4.4.2-6.1"><strong>Security Requirement V-20 (conditional):</strong> The Verifier must ensure
+that the credential was issued by an issuer that only issues credentials
+to trustworthy wallets.<a href="#section-4.4.2-6.1" class="pilcrow">¶</a></p>
+</blockquote>
+</section>
+</div>
+</section>
+</div>
+<div id="end-user-s-perspective">
+<section id="section-4.5">
+        <h3 id="name-end-users-perspective">
+<a href="#section-4.5" class="section-number selfRef">4.5. </a><a href="#name-end-users-perspective" class="section-name selfRef">End-User's Perspective</a>
+        </h3>
+<p id="section-4.5-1">The End-User trusts the Issuer, the Wallet, and the Verifier to treat
+her data securely and only exchange data as needed preserving her
+privacy. The End-User trusts the Wallet to validate the authenticity of
+Issuers and Verifiers and provide the End-User with trustworthy
+information about those.<a href="#section-4.5-1" class="pilcrow">¶</a></p>
+<p id="section-4.5-2">Therefore, the Wallet must provide trustworthy information about Issuers:<a href="#section-4.5-2" class="pilcrow">¶</a></p>
+<blockquote id="section-4.5-3">
+          <p id="section-4.5-3.1"><strong>Security Requirement W-20:</strong> The Wallet must provide trustworthy and
+complete information about Issuers to the End-User.<a href="#section-4.5-3.1" class="pilcrow">¶</a></p>
+</blockquote>
+<p id="section-4.5-4">Even more important for Verifiers:<a href="#section-4.5-4" class="pilcrow">¶</a></p>
+<blockquote id="section-4.5-5">
+          <p id="section-4.5-5.1"><strong>Security Requirement W-30:</strong> The Wallet must provide trustworthy and
+complete information about Verifiers to the End-User.<a href="#section-4.5-5.1" class="pilcrow">¶</a></p>
+</blockquote>
+<p id="section-4.5-6">Credentials must not be used without the End-Users consent.<a href="#section-4.5-6" class="pilcrow">¶</a></p>
+<blockquote id="section-4.5-7">
+          <p id="section-4.5-7.1"><strong>Privacy Requirement W-40:</strong> The Wallet must ask the End-User for meaningful
+consent before a Credential is used. The Wallet must provide the End-User the
+opportunity to review any data that is presented to a Verifier.<a href="#section-4.5-7.1" class="pilcrow">¶</a></p>
+</blockquote>
+<p id="section-4.5-8">The credential format must allow selective disclosure of data.<a href="#section-4.5-8" class="pilcrow">¶</a></p>
+<blockquote id="section-4.5-9">
+          <p id="section-4.5-9.1"><strong>Privacy Requirement CF-30:</strong> The Credential Format must ensure that there is
+a robust mechanism to ensure that data that is not to be released to a
+Verifier cannot be extracted by the Verifier (e.g., selective disclosure).<a href="#section-4.5-9.1" class="pilcrow">¶</a></p>
+</blockquote>
+<p id="section-4.5-10">The End-User trusts the Issuer and the Wallet provider to protect her
+from abuse of her Credentials. This mainly means that the implementation
+of the selected key management and protocols must be secure, but
+specifically the communication protocols must be designed such that an
+attacker cannot read (see/exfiltrate) PII.<a href="#section-4.5-10" class="pilcrow">¶</a></p>
+<blockquote id="section-4.5-11">
+          <p id="section-4.5-11.1"><strong>Security/Privacy Requirement P-60:</strong> The protocol must ensure that
+during an interaction with a Verifier, an attacker cannot read
+PII.<a href="#section-4.5-11.1" class="pilcrow">¶</a></p>
+<p id="section-4.5-11.2"><strong>Security/Privacy Requirement P-70:</strong> The protocol must ensure that
+during an interaction with an Issuer, an attacker cannot read
+PII.<a href="#section-4.5-11.2" class="pilcrow">¶</a></p>
+</blockquote>
+<p id="section-4.5-12">If an Issuer, Wallet, or Verifier is compromised, the risk for End-Users
+must be minimized.<a href="#section-4.5-12" class="pilcrow">¶</a></p>
+<blockquote id="section-4.5-13">
+          <p id="section-4.5-13.1"><strong>Security/Privacy Requirement W-50:</strong> The Wallet must ensure that the
+credentials and private keys are protected from unauthorized access.<a href="#section-4.5-13.1" class="pilcrow">¶</a></p>
+</blockquote>
+<p id="section-4.5-14">Since data leaks are hard to avoid completely in large ecosystems, the
+fallout of a compromise must be minimized.<a href="#section-4.5-14" class="pilcrow">¶</a></p>
+<blockquote id="section-4.5-15">
+          <p id="section-4.5-15.1"><strong>Security/Privacy Requirement E-50:</strong> The Trust Framework must
+ensure that lifecycles of keys, certificates, and credentials are
+designed such that the impact of a compromise is minimized.<a href="#section-4.5-15.1" class="pilcrow">¶</a></p>
+</blockquote>
+<p id="section-4.5-16">On the other hand, the End-User does not want the Issuer to learn where
+she uses the Credentials. This must be supported by the Issuer, the
+Wallet, and the Trust Framework.<a href="#section-4.5-16" class="pilcrow">¶</a></p>
+<blockquote id="section-4.5-17">
+          <p id="section-4.5-17.1"><strong>Privacy Requirement P-80:</strong> The protocol, including the revocation
+mechanism, must ensure that the Issuer cannot learn where the End-User uses
+the Credential.<a href="#section-4.5-17.1" class="pilcrow">¶</a></p>
+<p id="section-4.5-17.2"><strong>Privacy Requirement W-60:</strong> The Wallet must ensure that the Issuer
+cannot learn where the End-User uses the Credential.<a href="#section-4.5-17.2" class="pilcrow">¶</a></p>
+<p id="section-4.5-17.3"><strong>Privacy Requirement E-60:</strong> The Trust Framework must ensure that
+the Issuer cannot learn where the End-User uses the Credential.<a href="#section-4.5-17.3" class="pilcrow">¶</a></p>
+</blockquote>
+<p id="section-4.5-18">When using a Credential at multiple Verifiers, the End-User might not
+want that the Verifiers learn that the same End-User is using their
+services (correlation). The exception to this is when the End-Users
+shares data with the Verifiers that allow for a unique identification,
+e.g., a name and birth date, or a unique identifier, e.g., a social
+security number.<a href="#section-4.5-18" class="pilcrow">¶</a></p>
+<blockquote id="section-4.5-19">
+          <p id="section-4.5-19.1"><strong>Privacy Requirement W-70:</strong> The Wallet must ensure that the Verifier cannot
+learn that the same End-User is using other Verifiers (unless desired by the
+End-User).<a href="#section-4.5-19.1" class="pilcrow">¶</a></p>
+<p id="section-4.5-19.2"><strong>Privacy Requirement E-70:</strong> The Trust Framework must support
+correlation protection.<a href="#section-4.5-19.2" class="pilcrow">¶</a></p>
+<p id="section-4.5-19.3"><strong>Privacy Requirement CF-40:</strong> The Credential Format must support
+correlation protection.<a href="#section-4.5-19.3" class="pilcrow">¶</a></p>
+</blockquote>
+</section>
+</div>
+</section>
+</div>
+<div id="overview-of-security-and-privacy-requirements">
+<section id="section-5">
+      <h2 id="name-fulfilling-security-and-pri">
+<a href="#section-5" class="section-number selfRef">5. </a><a href="#name-fulfilling-security-and-pri" class="section-name selfRef">Fulfilling Security and Privacy Requirements</a>
+      </h2>
+<p id="section-5-1">The following table lists the security and privacy requirements and how
+they can be fulfilled. Except for the protocol-related requirements,
+this document does not provide details on how the requirements can be
+met.<a href="#section-5-1" class="pilcrow">¶</a></p>
+<div id="security-requirements-on-the-credential-format">
+<section id="section-5.1">
+        <h3 id="name-credential-format">
+<a href="#section-5.1" class="section-number selfRef">5.1. </a><a href="#name-credential-format" class="section-name selfRef">Credential Format</a>
+        </h3>
+<table class="center" id="table-1">
+          <caption><a href="#table-1" class="selfRef">Table 1</a></caption>
+<thead>
+            <tr>
+              <th class="text-left" rowspan="1" colspan="1">Security Requirement</th>
+              <th class="text-left" rowspan="1" colspan="1">How to achieve</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">CF-10</td>
+              <td class="text-left" rowspan="1" colspan="1">Requirement on the credential format</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">CF-20</td>
+              <td class="text-left" rowspan="1" colspan="1">Requirement on the credential format</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">CF-21</td>
+              <td class="text-left" rowspan="1" colspan="1">Requirement on the credential format</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">CF-30</td>
+              <td class="text-left" rowspan="1" colspan="1">Requirement on the credential format</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">CF-40</td>
+              <td class="text-left" rowspan="1" colspan="1">Requirement on the credential format</td>
+            </tr>
+          </tbody>
+        </table>
+</section>
+</div>
+<div id="security-requirements-on-the-trust-framework">
+<section id="section-5.2">
+        <h3 id="name-trust-framework">
+<a href="#section-5.2" class="section-number selfRef">5.2. </a><a href="#name-trust-framework" class="section-name selfRef">Trust Framework</a>
+        </h3>
+<table class="center" id="table-2">
+          <caption><a href="#table-2" class="selfRef">Table 2</a></caption>
+<thead>
+            <tr>
+              <th class="text-left" rowspan="1" colspan="1">Security Requirement</th>
+              <th class="text-left" rowspan="1" colspan="1">How to achieve</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">E-10</td>
+              <td class="text-left" rowspan="1" colspan="1">Selection of credential format</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">E-20</td>
+              <td class="text-left" rowspan="1" colspan="1">Requirement on management of issuers</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">E-30</td>
+              <td class="text-left" rowspan="1" colspan="1">Requirement on management of trust</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">E-40</td>
+              <td class="text-left" rowspan="1" colspan="1">Requirement on management of trust</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">E-50</td>
+              <td class="text-left" rowspan="1" colspan="1">Requirement on lifecycle management; also see <a href="#note-on-storage-of-credentials" class="auto internal xref">Section 3.3</a> above.</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">E-60</td>
+              <td class="text-left" rowspan="1" colspan="1">Requirement on lifecycle management and key distribution</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">E-70</td>
+              <td class="text-left" rowspan="1" colspan="1">Requirement on lifecycle management and key distribution</td>
+            </tr>
+          </tbody>
+        </table>
+<p id="section-5.2-2"><strong>Note:</strong> The involved parties need to access data about identifiers,
+keys, and Credentials as well as data about the acting parties
+themselves in order to securely implement the Credential exchange. The
+way this works is out of scope for OpenID for Verifiable Credential
+Issuance.<a href="#section-5.2-2" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="security-requirements-on-the-protocol">
+<section id="section-5.3">
+        <h3 id="name-protocol">
+<a href="#section-5.3" class="section-number selfRef">5.3. </a><a href="#name-protocol" class="section-name selfRef">Protocol</a>
+        </h3>
+<table class="center" id="table-3">
+          <caption><a href="#table-3" class="selfRef">Table 3</a></caption>
+<thead>
+            <tr>
+              <th class="text-left" rowspan="1" colspan="1">Security Requirement</th>
+              <th class="text-left" rowspan="1" colspan="1">How to achieve</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">P-10</td>
+              <td class="text-left" rowspan="1" colspan="1">see <a href="#security-requirement-p-10" class="auto internal xref">Section 6.2</a>
+</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">P-20</td>
+              <td class="text-left" rowspan="1" colspan="1">see <a href="#security-requirement-p-20" class="auto internal xref">Section 6.3</a>
+</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">P-30</td>
+              <td class="text-left" rowspan="1" colspan="1">see <a href="#security-requirement-p-30" class="auto internal xref">Section 6.4</a>
+</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">P-40</td>
+              <td class="text-left" rowspan="1" colspan="1">see <a href="#security-requirement-p-40" class="auto internal xref">Section 6.5</a>
+</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">P-41</td>
+              <td class="text-left" rowspan="1" colspan="1">see <a href="#security-requirement-p-41" class="auto internal xref">Section 6.6</a>
+</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">P-50</td>
+              <td class="text-left" rowspan="1" colspan="1">see <a href="#security-requirement-p-50" class="auto internal xref">Section 6.7</a>
+</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">P-60</td>
+              <td class="text-left" rowspan="1" colspan="1">see <a href="#security-privacy-requirement-p-60" class="auto internal xref">Section 6.8</a>
+</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">P-70</td>
+              <td class="text-left" rowspan="1" colspan="1">see <a href="#security-privacy-requirement-p-70" class="auto internal xref">Section 6.9</a>
+</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">P-80</td>
+              <td class="text-left" rowspan="1" colspan="1">see <a href="#privacy-requirement-p-80" class="auto internal xref">Section 6.10</a>
+</td>
+            </tr>
+          </tbody>
+        </table>
+</section>
+</div>
+<div id="security-requirements-on-the-verifier">
+<section id="section-5.4">
+        <h3 id="name-verifier">
+<a href="#section-5.4" class="section-number selfRef">5.4. </a><a href="#name-verifier" class="section-name selfRef">Verifier</a>
+        </h3>
+<table class="center" id="table-4">
+          <caption><a href="#table-4" class="selfRef">Table 4</a></caption>
+<thead>
+            <tr>
+              <th class="text-left" rowspan="1" colspan="1">Security Requirement</th>
+              <th class="text-left" rowspan="1" colspan="1">How to achieve</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">V-00</td>
+              <td class="text-left" rowspan="1" colspan="1">Implementation requirement</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">V-01</td>
+              <td class="text-left" rowspan="1" colspan="1">Implementation requirement</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">V-10</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <strong>TODO</strong> add more details in appropriate place</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">V-20</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <strong>TODO</strong> add more details in appropriate place</td>
+            </tr>
+          </tbody>
+        </table>
+</section>
+</div>
+<div id="security-requirements-on-the-wallet">
+<section id="section-5.5">
+        <h3 id="name-wallet">
+<a href="#section-5.5" class="section-number selfRef">5.5. </a><a href="#name-wallet" class="section-name selfRef">Wallet</a>
+        </h3>
+<table class="center" id="table-5">
+          <caption><a href="#table-5" class="selfRef">Table 5</a></caption>
+<thead>
+            <tr>
+              <th class="text-left" rowspan="1" colspan="1">Security Requirement</th>
+              <th class="text-left" rowspan="1" colspan="1">How to achieve</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">W-00</td>
+              <td class="text-left" rowspan="1" colspan="1">Implementation requirement</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">W-01</td>
+              <td class="text-left" rowspan="1" colspan="1">Implementation requirement</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">W-10</td>
+              <td class="text-left" rowspan="1" colspan="1">Out of scope</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">W-20</td>
+              <td class="text-left" rowspan="1" colspan="1">Implementation and operation requirement</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">W-30</td>
+              <td class="text-left" rowspan="1" colspan="1">Implementation and operation requirement</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">W-40</td>
+              <td class="text-left" rowspan="1" colspan="1">Implementation and operation requirement</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">W-50</td>
+              <td class="text-left" rowspan="1" colspan="1">Implementation and operation requirement  (see <a href="#note-on-storage-of-credentials" class="auto internal xref">Section 3.3</a>)</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">W-60</td>
+              <td class="text-left" rowspan="1" colspan="1">Implementation and operation requirement</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">W-70</td>
+              <td class="text-left" rowspan="1" colspan="1">Implementation and operation requirement</td>
+            </tr>
+          </tbody>
+        </table>
+</section>
+</div>
+<div id="security-requirements-on-the-issuer">
+<section id="section-5.6">
+        <h3 id="name-issuer">
+<a href="#section-5.6" class="section-number selfRef">5.6. </a><a href="#name-issuer" class="section-name selfRef">Issuer</a>
+        </h3>
+<table class="center" id="table-6">
+          <caption><a href="#table-6" class="selfRef">Table 6</a></caption>
+<thead>
+            <tr>
+              <th class="text-left" rowspan="1" colspan="1">Security Requirement</th>
+              <th class="text-left" rowspan="1" colspan="1">How to achieve</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">I-01</td>
+              <td class="text-left" rowspan="1" colspan="1">Implementation requirement</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">I-00</td>
+              <td class="text-left" rowspan="1" colspan="1">Implementation requirement</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">I-10</td>
+              <td class="text-left" rowspan="1" colspan="1">Implementation and End-User authentication requirement</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">I-20</td>
+              <td class="text-left" rowspan="1" colspan="1">Implementation and End-User authentication requirement</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">I-30</td>
+              <td class="text-left" rowspan="1" colspan="1">Implementation and operation requirement</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">I-40</td>
+              <td class="text-left" rowspan="1" colspan="1">Implementation and operation requirement</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">I-50</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <strong>TODO</strong> add more details in appropriate place</td>
+            </tr>
+          </tbody>
+        </table>
+</section>
+</div>
+</section>
+</div>
+<div id="protocol-analysis-openid-for-vc">
+<section id="section-6">
+      <h2 id="name-protocol-analysis-openid-fo">
+<a href="#section-6" class="section-number selfRef">6. </a><a href="#name-protocol-analysis-openid-fo" class="section-name selfRef">Protocol Analysis OpenID for VC</a>
+      </h2>
+<p id="section-6-1">OpenID for VC consists of three protocols:<a href="#section-6-1" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-6-2.1">OpenID for Verifiable Credential Issuance - Defines an API and
+corresponding OAuth-based authorization mechanisms for issuance of
+Verifiable Credentials<a href="#section-6-2.1" class="pilcrow">¶</a>
+</li>
+        <li class="normal" id="section-6-2.2">OpenID for Verifiable Presentations - Defines a mechanism on top of
+OAuth 2.0 to allow presentation of claims in the form of Verifiable
+Credentials as part of the protocol flow<a href="#section-6-2.2" class="pilcrow">¶</a>
+</li>
+        <li class="normal" id="section-6-2.3">Self-Issued OpenID Provider v2 - Enables End-Users to use OpenID
+Providers (OPs) that they control<a href="#section-6-2.3" class="pilcrow">¶</a>
+</li>
+      </ul>
+<p id="section-6-3">The following analysis aims to show that OpenID for VC meets the security
+and privacy requirements defined in the previous section. This is an
+informal analysis that may be incomplete or contain mistakes. A formal
+analysis to confirm the results is yet to be done.<a href="#section-6-3" class="pilcrow">¶</a></p>
+<div id="attacker-model">
+<section id="section-6.1">
+        <h3 id="name-attacker-model">
+<a href="#section-6.1" class="section-number selfRef">6.1. </a><a href="#name-attacker-model" class="section-name selfRef">Attacker Model</a>
+        </h3>
+<p id="section-6.1-1">For this analysis, the Web Attacker and Network Attacker models defined
+as (A1) and (A2) in the OAuth Security BCP are assumed. In the context
+of this specification, the Web Attacker model in particular means that
+arbitrary Issuers, Wallets, and Verifiers can be under the control of an
+attacker. The security of all other participants must be ensured
+nonetheless. For example, the security of a non-compromised Wallet that
+interacts with multiple Issuers and Verifiers must not be affected by a
+single compromised Issuer or Verifier.<a href="#section-6.1-1" class="pilcrow">¶</a></p>
+<p id="section-6.1-2">Special considerations are made where requests are forwarded between
+devices (cross-device) and between mobile apps on the same device
+(app-to-app).<a href="#section-6.1-2" class="pilcrow">¶</a></p>
+<div id="malicious-credential-issuer-metadata-configurations">
+<section id="section-6.1.1">
+          <h4 id="name-malicious-credential-issuer">
+<a href="#section-6.1.1" class="section-number selfRef">6.1.1. </a><a href="#name-malicious-credential-issuer" class="section-name selfRef">Malicious Credential Issuer Metadata Configurations</a>
+          </h4>
+<p id="section-6.1.1-1">Since it is assumed that the attacker can operate Issuers, the attacker
+can attempt to perform mix-up type attacks by configuring the credential
+issuer metadata (cf. Section 10.2. in OID4VCI) under their control
+according to the following list:<a href="#section-6.1.1-1" class="pilcrow">¶</a></p>
+<p id="section-6.1.1-2"><strong>TODO</strong>: Deferred Credential Endpoint metadata needs to be defined in OID4VCI spec.<a href="#section-6.1.1-2" class="pilcrow">¶</a></p>
+<p id="section-6.1.1-3">No Mix-Up:<a href="#section-6.1.1-3" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-6.1.1-4.1">
+              <code>credential_issuer</code>: Attacker's Credential Issuer Identifier<a href="#section-6.1.1-4.1" class="pilcrow">¶</a>
+</li>
+            <li class="normal" id="section-6.1.1-4.2">
+              <code>authorization_server</code>: Attacker's Authorization Server<a href="#section-6.1.1-4.2" class="pilcrow">¶</a>
+</li>
+            <li class="normal" id="section-6.1.1-4.3">
+              <code>credential_endpoint</code>: Attacker's Credential Endpoint<a href="#section-6.1.1-4.3" class="pilcrow">¶</a>
+</li>
+            <li class="normal" id="section-6.1.1-4.4">
+              <code>batch_credential_endpoint</code>: Attacker's Batch Credential Endpoint<a href="#section-6.1.1-4.4" class="pilcrow">¶</a>
+</li>
+          </ul>
+<p id="section-6.1.1-5">Mix-Up Type 1:<a href="#section-6.1.1-5" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-6.1.1-6.1">
+              <code>credential_issuer</code>: Attacker's Credential Issuer Identifier<a href="#section-6.1.1-6.1" class="pilcrow">¶</a>
+</li>
+            <li class="normal" id="section-6.1.1-6.2">
+              <code>authorization_server</code>: Honest Issuer's Authorization Server<a href="#section-6.1.1-6.2" class="pilcrow">¶</a>
+</li>
+            <li class="normal" id="section-6.1.1-6.3">
+              <code>credential_endpoint</code>: Attacker-controlled Credential Endpoint<a href="#section-6.1.1-6.3" class="pilcrow">¶</a>
+</li>
+            <li class="normal" id="section-6.1.1-6.4">
+              <code>batch_credential_endpoint</code>: Attacker-controlled Batch Credential
+Endpoint<a href="#section-6.1.1-6.4" class="pilcrow">¶</a>
+</li>
+          </ul>
+<p id="section-6.1.1-7"><strong>TODO</strong> 1a, Variant of Type 1: Only deferred endpoint it attacker-controlled.<a href="#section-6.1.1-7" class="pilcrow">¶</a></p>
+<p id="section-6.1.1-8">Mix-Up Type 2:<a href="#section-6.1.1-8" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-6.1.1-9.1">
+              <code>credential_issuer</code>: Attacker's Credential Issuer Identifier<a href="#section-6.1.1-9.1" class="pilcrow">¶</a>
+</li>
+            <li class="normal" id="section-6.1.1-9.2">
+              <code>authorization_server</code>: Attacker-controlled Authorization Server<a href="#section-6.1.1-9.2" class="pilcrow">¶</a>
+</li>
+            <li class="normal" id="section-6.1.1-9.3">
+              <code>credential_endpoint</code>: Honest Issuer's Credential Endpoint<a href="#section-6.1.1-9.3" class="pilcrow">¶</a>
+</li>
+            <li class="normal" id="section-6.1.1-9.4">
+              <code>batch_credential_endpoint</code>: Honest Issuer's Batch Credential Endpoint<a href="#section-6.1.1-9.4" class="pilcrow">¶</a>
+</li>
+          </ul>
+<p id="section-6.1.1-10">Note that when an attacker-controlled Authorization Server is used, the
+attacker can also perform regular OAuth Mix-Up attacks unless prevented by
+the <code>iss</code> parameter according to <span>[<a href="#RFC9207" class="cite xref">RFC9207</a>]</span>.<a href="#section-6.1.1-10" class="pilcrow">¶</a></p>
+<p id="section-6.1.1-11">These configurations will be used in the attack descriptions below.<a href="#section-6.1.1-11" class="pilcrow">¶</a></p>
+<p id="section-6.1.1-12"><strong>Important:</strong> Not in all real-world ecosystems will attackers have enough
+control to set up configurations necessary for mix-up attacks. (For example,
+if there is only a single hard-coded Issuer in the ecosystem.)<a href="#section-6.1.1-12" class="pilcrow">¶</a></p>
+</section>
+</div>
+</section>
+</div>
+<div id="security-requirement-p-10">
+<section id="section-6.2">
+        <h3 id="name-privacy-security-requiremen">
+<a href="#section-6.2" class="section-number selfRef">6.2. </a><a href="#name-privacy-security-requiremen" class="section-name selfRef">Privacy/Security Requirement P-10</a>
+        </h3>
+<blockquote id="section-6.2-1">
+          <p id="section-6.2-1.1">The issuance protocol must ensure that no third party can read the
+credential issued by the Issuer.<a href="#section-6.2-1.1" class="pilcrow">¶</a></p>
+</blockquote>
+<p id="section-6.2-2">On the network level, this is achieved by TLS encrypted connections.<a href="#section-6.2-2" class="pilcrow">¶</a></p>
+<p id="section-6.2-3">On top of TLS, the protocol uses an OAuth 2.0 flow to authorize the
+release of a credential.<a href="#section-6.2-3" class="pilcrow">¶</a></p>
+<p id="section-6.2-4">Credentials can be released at one of three issuance endpoints:<a href="#section-6.2-4" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-6.2-5.1">The credential endpoint can send a credential response containing a
+credential,<a href="#section-6.2-5.1" class="pilcrow">¶</a>
+</li>
+          <li class="normal" id="section-6.2-5.2">the batch credential endpoint can send a batch credential response
+containing multiple credentials, or<a href="#section-6.2-5.2" class="pilcrow">¶</a>
+</li>
+          <li class="normal" id="section-6.2-5.3">the deferred credential endpoint can send a a credential response
+containing a credential.<a href="#section-6.2-5.3" class="pilcrow">¶</a>
+</li>
+        </ul>
+<p id="section-6.2-6">The deferred credential endpoint requires the use of an acceptance token
+as a bearer token. The acceptance token can be obtained only from the
+credential endpoint or batch credential endpoint. <strong>TODO</strong> Is the
+endpoint a protected resource? Can DPoP or MTLS be enforced? (see <a href="https://bitbucket.org/openid/connect/issues/1808/dpop-and-acceptance-tokens">https://bitbucket.org/openid/connect/issues/1808/dpop-and-acceptance-tokens</a>)<a href="#section-6.2-6" class="pilcrow">¶</a></p>
+<p id="section-6.2-7"><strong>ATTACK</strong>: An attacker can configure Mix-Up 1a. The attacker receives
+an acceptance token from the Wallet's request to the deferred credential
+endpoint and  uses it to obtain a credential from the deferred
+credential endpoint of the honest server. <em>Potential solution:</em> The
+credential endpoint and batch credential endpoint can only be accessed
+by using an access token. Can DPoP or MTLS be enforced for an acceptance
+token? Better to use access token instead.<a href="#section-6.2-7" class="pilcrow">¶</a></p>
+<p id="section-6.2-8"><strong>ATTACK</strong>: With Mix-Up 1, the attacker can obtain a credential from the
+honest server by using the access token it receives via the call to its own
+credential endpoint. <em>Solution:</em> MTLS or DPoP must be used to prevent this kind of attack if
+Mix-Up configurations are a concern.<a href="#section-6.2-8" class="pilcrow">¶</a></p>
+<p id="section-6.2-9">An access token can only be obtained from the token endpoint using one
+of the existing OAuth grant types or the new grant type
+<code>urn:ietf:params:oauth:grant-type:pre-authorized_code</code> defined in the
+specification.<a href="#section-6.2-9" class="pilcrow">¶</a></p>
+<div id="pre-authorized-code-grant">
+<section id="section-6.2.1">
+          <h4 id="name-pre-authorized-code-grant">
+<a href="#section-6.2.1" class="section-number selfRef">6.2.1. </a><a href="#name-pre-authorized-code-grant" class="section-name selfRef">Pre-Authorized Code Grant</a>
+          </h4>
+<p id="section-6.2.1-1">For the <strong>pre-authorized code grant</strong>, the Wallet obtaining the token
+needs to possess a pre-authorized code. This code is received directly
+from the credential issuer after an interaction between the user and the
+credential issuer, for example, via a QR code or a deeplink. The
+pre-authorized code MUST (by definition) be short-lived and single-use.<a href="#section-6.2.1-1" class="pilcrow">¶</a></p>
+<p id="section-6.2.1-2"><strong>Recommendation:</strong> Measures must be in place to avoid that the
+pre-authorized code is intercepted by a third party. For a QR code, it
+is recommended that the code is not displayed to the user in public
+environments. Deeplinks should, if possible, aim to target a specific
+application in order to avoid interception by third party applications.<a href="#section-6.2.1-2" class="pilcrow">¶</a></p>
+<p id="section-6.2.1-3">An additional PIN that is transferred from the issuer to the verifier
+can be used to protect the pre-authorized code.<a href="#section-6.2.1-3" class="pilcrow">¶</a></p>
+<p id="section-6.2.1-4">Todo: Whats the role of the PIN precisely? Should it be invalidated after a couple of attempts?<a href="#section-6.2.1-4" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="authorization-code-grant">
+<section id="section-6.2.2">
+          <h4 id="name-authorization-code-grant">
+<a href="#section-6.2.2" class="section-number selfRef">6.2.2. </a><a href="#name-authorization-code-grant" class="section-name selfRef">Authorization Code Grant</a>
+          </h4>
+<p id="section-6.2.2-1">For all <strong>other grant types</strong>, the considerations in the OAuth Security
+BCP apply, as explicitly mentioned in the specification.<a href="#section-6.2.2-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+</section>
+</div>
+<div id="security-requirement-p-20">
+<section id="section-6.3">
+        <h3 id="name-security-requirement-p-20">
+<a href="#section-6.3" class="section-number selfRef">6.3. </a><a href="#name-security-requirement-p-20" class="section-name selfRef">Security Requirement P-20</a>
+        </h3>
+<blockquote id="section-6.3-1">
+          <p id="section-6.3-1.1">The protocol must ensure that no third party can interfere with the
+issuance process such that the Issuer issues Credentials for the third
+party to the End-User.<a href="#section-6.3-1.1" class="pilcrow">¶</a></p>
+</blockquote>
+<p id="section-6.3-2">In order to receive credentials originally created for a different
+End-User, the Wallet would need to receive it from one of the issuance
+endpoints listed above.<a href="#section-6.3-2" class="pilcrow">¶</a></p>
+<div id="honest-credential-issuer">
+<section id="section-6.3.1">
+          <h4 id="name-honest-credential-issuer">
+<a href="#section-6.3.1" class="section-number selfRef">6.3.1. </a><a href="#name-honest-credential-issuer" class="section-name selfRef">Honest Credential Issuer</a>
+          </h4>
+<p id="section-6.3.1-1">If the Wallet is using a Credential Issuer identifier that is used by an
+honest party, it can be assumed that all endpoints used in the flow
+(authorization server, token endpoint, issuance endpoints) are provided
+by the same, honest party.<a href="#section-6.3.1-1" class="pilcrow">¶</a></p>
+<p id="section-6.3.1-2">In this case, the latest point in the flow where an attacker can
+interfere with the process is the authorization response in the case of
+the authorization code flow and the pre-authorized code in case of the
+pre-authorized code flow.<a href="#section-6.3.1-2" class="pilcrow">¶</a></p>
+<div id="authorization-code-flow">
+<section id="section-6.3.1.1">
+            <h5 id="name-authorization-code-flow">
+<a href="#section-6.3.1.1" class="section-number selfRef">6.3.1.1. </a><a href="#name-authorization-code-flow" class="section-name selfRef">Authorization Code Flow</a>
+            </h5>
+<p id="section-6.3.1.1-1">In case of the authorization code flow, an attacker can attempt to
+inject their own response into the flow instead of the original
+authorization response. This is a well-known attack vector on OAuth
+flows that is prevented by the use of PKCE, as recommended in the OAuth
+Security BCP.<a href="#section-6.3.1.1-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="pre-authorized-code-flow">
+<section id="section-6.3.1.2">
+            <h5 id="name-pre-authorized-code-flow">
+<a href="#section-6.3.1.2" class="section-number selfRef">6.3.1.2. </a><a href="#name-pre-authorized-code-flow" class="section-name selfRef">Pre-Authorized Code Flow</a>
+            </h5>
+<p id="section-6.3.1.2-1">In this case, an attacker can attempt to forward a pre-authorized code
+created for his End-User identity to a different End-User. Mitigations
+against this are discussed in Section 11.3. of the OID4VCI
+specification.<a href="#section-6.3.1.2-1" class="pilcrow">¶</a></p>
+<p id="section-6.3.1.2-2"><strong>TODO</strong> The spec does not distinguish between replay (attacker forwards
+code to other Wallet/end-user) and stealing the code (attacker scans
+code intended for other user). This needs to be fixed.<a href="#section-6.3.1.2-2" class="pilcrow">¶</a></p>
+</section>
+</div>
+</section>
+</div>
+<div id="compromised-credential-issuer">
+<section id="section-6.3.2">
+          <h4 id="name-compromised-credential-issu">
+<a href="#section-6.3.2" class="section-number selfRef">6.3.2. </a><a href="#name-compromised-credential-issu" class="section-name selfRef">Compromised Credential Issuer</a>
+          </h4>
+<p id="section-6.3.2-1">In case the Wallet uses a Credential Issuer Identifier under the control
+of an attacker, the attacker can configure the endpoints of the  Issuer
+as described in <a href="#malicious-credential-issuer-metadata-configurations" class="auto internal xref">Section 6.1.1</a>
+above.<a href="#section-6.3.2-1" class="pilcrow">¶</a></p>
+<p id="section-6.3.2-2">In the first case (No Mix-Up), the attacker has full control over the
+flow. The attacker can return, for example, a credential created for
+an End-User obtained from a completely different Issuer.<a href="#section-6.3.2-2" class="pilcrow">¶</a></p>
+<p id="section-6.3.2-3"><strong>Recommendation:</strong> The Wallet MUST verify that the Issuer of the received
+credential is the expected Credential Issuer. This means that the
+credential format needs to encode sufficient information to allow the
+Wallet to verify this relationship. (New requirement on CF.)<a href="#section-6.3.2-3" class="pilcrow">¶</a></p>
+<p id="section-6.3.2-4">In the second case (Mix-Up), other attacks are possible, but regarding
+interference with the issuance process, the same considerations as in
+the previous case apply. Using the iss parameter from RFC9207 should
+help to prevent standard OAuth mix-up attacks.<a href="#section-6.3.2-4" class="pilcrow">¶</a></p>
+</section>
+</div>
+</section>
+</div>
+<div id="security-requirement-p-30">
+<section id="section-6.4">
+        <h3 id="name-security-requirement-p-30">
+<a href="#section-6.4" class="section-number selfRef">6.4. </a><a href="#name-security-requirement-p-30" class="section-name selfRef">Security Requirement P-30</a>
+        </h3>
+<blockquote id="section-6.4-1">
+          <p id="section-6.4-1.1">The protocol must ensure that the interaction between the Wallet and
+Verifier is protected such that no third party can interfere with the
+interaction by modifying the information transmitted.<a href="#section-6.4-1.1" class="pilcrow">¶</a></p>
+</blockquote>
+<p id="section-6.4-2">The target of this attack is the user's device. The attacker needs to be
+able to inject a presentation into a flow between the user and a
+Verifier. For this to work, the user has to have started a flow with the
+Verifier. This means that the Verifier then expects a presentation with
+a specific audience and nonce.<a href="#section-6.4-2" class="pilcrow">¶</a></p>
+<p id="section-6.4-3">Unless the attacker has access to the initial request between the
+Verifier and the Wallet, the attacker cannot know the nonce that is
+expected in the flow. This works similar to the state value in classic
+OAuth flows.<a href="#section-6.4-3" class="pilcrow">¶</a></p>
+<p id="section-6.4-4">If the attacker does have access to the initial request, the attacker
+would be able to replay the request on his own device and capture the
+presentation. The attacker could then use this presentation to inject it
+into the flow between the user and the Verifier. Similar attacks can
+happen in classic OAuth flows and are not mitigated by the use of
+"nonce" or state. However, for this (relatively weak) attack to succeed,
+a (relatively strong) attacker with access to the communication between
+the Verifier and the Wallet is required. The likelihood of a successful
+attack can be reduced when, for the Wallet, claimed URLs are used and
+custom schemes and endpoints on localhost addresses are avoided.<a href="#section-6.4-4" class="pilcrow">¶</a></p>
+<p id="section-6.4-5">Note: An additional encryption of the request to the Wallet at the
+application layer would not prevent this attack as the attacker could
+still replay the encrypted request to the Wallet.<a href="#section-6.4-5" class="pilcrow">¶</a></p>
+<p id="section-6.4-6"><strong>PROBLEM:</strong> If no holder binding is used, right now, there is no way to
+transport the nonce. I.e., an attacker might inject a presentation. In
+direct post mode, the Verifier might not even find the session. Just
+having an unsigned nonce would help here - i.e., <code>state</code>.<a href="#section-6.4-6" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="security-requirement-p-40">
+<section id="section-6.5">
+        <h3 id="name-security-requirement-p-40">
+<a href="#section-6.5" class="section-number selfRef">6.5. </a><a href="#name-security-requirement-p-40" class="section-name selfRef">Security Requirement P-40</a>
+        </h3>
+<blockquote id="section-6.5-1">
+          <p id="section-6.5-1.1">The protocol must ensure that the interaction between an attacker and
+a Verifier cannot be forwarded to and successfully completed by a
+user.<a href="#section-6.5-1.1" class="pilcrow">¶</a></p>
+</blockquote>
+<p id="section-6.5-2">For this attack, an attacker starts a presentation flow with a Verifier.
+The Verifier generates an authentication request that the attacker can
+now forward to their victim. The victim might be tricked into thinking
+that the completion of the flow is necessary and the attacker may or may
+not impersonate the Verifier for this purpose. The victim authenticates,
+authorizes the request and a presentation is created and sent to the
+Verifier. Without further countermeasures, Verifier would accept the
+presentation and apply it to the session between the attacker and the
+Verifier. The attacker can now impersonate the Victim. <strong>TODO</strong> More
+details for description.<a href="#section-6.5-2" class="pilcrow">¶</a></p>
+<p id="section-6.5-3">The countermeasures against this attack are different in the same-device
+flow and the cross-device flow.<a href="#section-6.5-3" class="pilcrow">¶</a></p>
+<div id="same-device-flow">
+<section id="section-6.5.1">
+          <h4 id="name-same-device-flow">
+<a href="#section-6.5.1" class="section-number selfRef">6.5.1. </a><a href="#name-same-device-flow" class="section-name selfRef">Same-Device Flow</a>
+          </h4>
+<p id="section-6.5.1-1">In the same-device flow, the authentication response would be received
+by the Verifier in the victim's browser. The Verifier should maintain a
+mapping between user sessions and the nonce that is expected in the
+flow. The Verifier should only accept a presentation if the nonce in the
+presentation matches the nonce that is expected for the user session.
+With this countermeasure, the Verifier can detect if a presentation is
+sent that was not bound to the user's session or if no user
+session exists at all, preventing the attack.<a href="#section-6.5.1-1" class="pilcrow">¶</a></p>
+<p id="section-6.5.1-2">RECOMMENDATION: While this is expected from OAuth implementations, the
+importance of this measure should be highlighted in the specification.<a href="#section-6.5.1-2" class="pilcrow">¶</a></p>
+<p id="section-6.5.1-3"><strong>Note on web-to-app flows:</strong> In the case of web-to-app flows (i.e., the
+Verifier is a website, but the Wallet is an app), the authentication
+response needs to go back to the same browser where the user started the
+flow. This may require extra steps in the implementation.<a href="#section-6.5.1-3" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="cross-device-flow">
+<section id="section-6.5.2">
+          <h4 id="name-cross-device-flow">
+<a href="#section-6.5.2" class="section-number selfRef">6.5.2. </a><a href="#name-cross-device-flow" class="section-name selfRef">Cross-Device Flow</a>
+          </h4>
+<p id="section-6.5.2-1">In the cross-device flow, the authentication response cannot be sent
+back to the same browser where the Verifier runs. Instead, the
+authentication response is sent using the direct post mode in the
+backend. This means that no session context exists for the Verifier to
+assure the binding between the browser where the user started the flow
+and the presentation that is sent to the Verifier.<a href="#section-6.5.2-1" class="pilcrow">¶</a></p>
+<p id="section-6.5.2-2">There is currently no widely-available, convenient way to fix this
+problem. A more detailed discussion including potential countermeasures
+can be found in the Cross-Device Security BCP.<a href="#section-6.5.2-2" class="pilcrow">¶</a></p>
+</section>
+</div>
+</section>
+</div>
+<div id="security-requirement-p-41">
+<section id="section-6.6">
+        <h3 id="name-security-requirement-p-41">
+<a href="#section-6.6" class="section-number selfRef">6.6. </a><a href="#name-security-requirement-p-41" class="section-name selfRef">Security Requirement P-41</a>
+        </h3>
+<blockquote id="section-6.6-1">
+          <p id="section-6.6-1.1">The protocol must ensure that an attacker cannot successfully forward
+an interaction between a Wallet and a Verifier to a Verifier under his
+own control.<a href="#section-6.6-1.1" class="pilcrow">¶</a></p>
+</blockquote>
+<p id="section-6.6-2">A prerequisite for a successful attack of this kind is that the attacker
+has access to some messages between the Wallet and the Verifier.<a href="#section-6.6-2" class="pilcrow">¶</a></p>
+<p id="section-6.6-3">The attacker might have access to the authentication response. In this
+case, the attacker has access to the presentation contained in the VP
+Token.<a href="#section-6.6-3" class="pilcrow">¶</a></p>
+<p id="section-6.6-4">The attacker can now start an interaction with the Verifier under his
+control. The attacker can then send the presentation to the Verifier
+instead of a presentation created by his own Wallet. The Verifier would
+then accept the presentation and apply it to the session between the
+attacker and the Verifier. The attacker can now impersonate the
+End-User.<a href="#section-6.6-4" class="pilcrow">¶</a></p>
+<p id="section-6.6-5">This is prevented by the nonce contained in the authorization request
+and the presentation. The Verifier can verify that the nonce in the
+presentation matches the nonce in the authorization request. However,
+the Verifier must also check that the audience of the presentation
+matches the Verifier's identifier. Without this check, an attacker could
+convince the End-User to start a new, independent flow with a Verifier
+und the attacker's control and re-use the nonce from the original flow
+in the authentication request. By checking the audience, this attack is
+prevented.<a href="#section-6.6-5" class="pilcrow">¶</a></p>
+<p id="section-6.6-6">(In the same-device flow, the Verifier usually associates the attacker's
+session with the selected nonce. In the cross-device flow, the nonce
+might be used as the single identifier for the flow to which a
+presentation belongs. In both cases, a nonce that is not the nonce the
+Verifier selected for the flow with the attacker would not work.)<a href="#section-6.6-6" class="pilcrow">¶</a></p>
+<p id="section-6.6-7"><strong>TODO:</strong> Analyze -&gt; Injection and -&gt; MITM<a href="#section-6.6-7" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="security-requirement-p-50">
+<section id="section-6.7">
+        <h3 id="name-security-requirement-p-50">
+<a href="#section-6.7" class="section-number selfRef">6.7. </a><a href="#name-security-requirement-p-50" class="section-name selfRef">Security Requirement P-50</a>
+        </h3>
+<blockquote id="section-6.7-1">
+          <p id="section-6.7-1.1">The protocol must ensure that third parties cannot interfere with the
+binding process.<a href="#section-6.7-1.1" class="pilcrow">¶</a></p>
+</blockquote>
+<p id="section-6.7-2"><strong>Open Question:</strong> Is the Wallet-provided nonce required?<a href="#section-6.7-2" class="pilcrow">¶</a></p>
+<p id="section-6.7-3"><strong>TODO:</strong> Analyze -&gt; MITM and the role of redirect URIs.<a href="#section-6.7-3" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="security-privacy-requirement-p-60">
+<section id="section-6.8">
+        <h3 id="name-security-privacy-requiremen">
+<a href="#section-6.8" class="section-number selfRef">6.8. </a><a href="#name-security-privacy-requiremen" class="section-name selfRef">Security/Privacy Requirement P-60</a>
+        </h3>
+<blockquote id="section-6.8-1">
+          <p id="section-6.8-1.1">The protocol must ensure that during an interaction with a Verifier,
+an attacker cannot read PII.<a href="#section-6.8-1.1" class="pilcrow">¶</a></p>
+</blockquote>
+<p id="section-6.8-2">As above, it can be assumed that all network connections are secured by TLS.<a href="#section-6.8-2" class="pilcrow">¶</a></p>
+<p id="section-6.8-3">On the level of the OAuth-based protocol, the PII in the form of the
+presentation is transferred during the authentication response (or,
+based on an authorization code sent in the authentication response,
+later in the token response).<a href="#section-6.8-3" class="pilcrow">¶</a></p>
+<p id="section-6.8-4">It is therefore important that the authentication response is not
+sent to an attacker-controlled endpoint.<a href="#section-6.8-4" class="pilcrow">¶</a></p>
+<p id="section-6.8-5">The authentication response is sent to the redirect URI specified in
+the request to the Wallet.<a href="#section-6.8-5" class="pilcrow">¶</a></p>
+<p id="section-6.8-6">There are two options for the verification of the redirect URI:<a href="#section-6.8-6" class="pilcrow">¶</a></p>
+<ol start="1" type="1" class="normal type-1" id="section-6.8-7">
+<li id="section-6.8-7.1">The Verifier specifies the redirect URI in the request to the
+Wallet. The request is signed using a key that the Wallet can verify
+and show the proper name of the Verifier to the user.<a href="#section-6.8-7.1" class="pilcrow">¶</a>
+</li>
+          <li id="section-6.8-7.2">The redirect URI is registered beforehand and therefore guaranteed
+to be authentic.<a href="#section-6.8-7.2" class="pilcrow">¶</a>
+</li>
+        </ol>
+<p id="section-6.8-8">If the authorization code flow is used, it must be ensured that the
+token endpoint URL is authentic as well (i.e., belongs to the same
+Verifier).<a href="#section-6.8-8" class="pilcrow">¶</a></p>
+<p id="section-6.8-9"><strong>TODO</strong> Is the above paragraph correct? Also check if the OID4VP spec ensures
+authenticity of the token endpoint URL.<a href="#section-6.8-9" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="security-privacy-requirement-p-70">
+<section id="section-6.9">
+        <h3 id="name-security-privacy-requirement">
+<a href="#section-6.9" class="section-number selfRef">6.9. </a><a href="#name-security-privacy-requirement" class="section-name selfRef">Security/Privacy Requirement P-70</a>
+        </h3>
+<blockquote id="section-6.9-1">
+          <p id="section-6.9-1.1">The protocol must ensure that during an interaction with an Issuer, an
+attacker cannot read PII.<a href="#section-6.9-1.1" class="pilcrow">¶</a></p>
+</blockquote>
+<p id="section-6.9-2">*<em>TODO:</em> Analyze -&gt; Encryption, -&gt; MITM, the role of redirect URIs.<a href="#section-6.9-2" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="privacy-requirement-p-80">
+<section id="section-6.10">
+        <h3 id="name-privacy-requirement-p-80">
+<a href="#section-6.10" class="section-number selfRef">6.10. </a><a href="#name-privacy-requirement-p-80" class="section-name selfRef">Privacy Requirement P-80</a>
+        </h3>
+<blockquote id="section-6.10-1">
+          <p id="section-6.10-1.1">The protocol must ensure that the Issuer cannot learn where the
+End-User uses the Credential.<a href="#section-6.10-1.1" class="pilcrow">¶</a></p>
+</blockquote>
+<p id="section-6.10-2">The interaction between the Wallet and the Verifier is not inherently
+tied to any interaction between either the Wallet and the Issuer or the
+Verifier and the Issuer, with the following (potential) exceptions:<a href="#section-6.10-2" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-6.10-3.1">The Wallet may need to retrieve a new credential from the Issuer
+before presenting it to the Verifier. Reasons can include that the
+credential has expired, that the Wallet has removed the credential,
+or that the Wallet needs a new credential to present to the Verifier
+in order to avoid correlation. The point in time when such an
+interaction happens may leak information about the Wallet's actions,
+but is usually a weak correlation vector.<a href="#section-6.10-3.1" class="pilcrow">¶</a>
+</li>
+          <li class="normal" id="section-6.10-3.2">The Verifier may need to retrieve a signature verification key,
+revocation information or other data from the Issuer before verifying
+the credential. This is not a privacy concern, but may leak
+information about the Wallet's actions.<a href="#section-6.10-3.2" class="pilcrow">¶</a>
+</li>
+        </ul>
+<p id="section-6.10-4"><strong>Recommendation:</strong> Wallets can be designed to avoid this by, for example,
+by refreshing credentials at a random point in time.<a href="#section-6.10-4" class="pilcrow">¶</a></p>
+<p id="section-6.10-5"><strong>Recommendation:</strong> The Verifier can be designed to avoid this by, for
+example, by caching the data for a random period of time.<a href="#section-6.10-5" class="pilcrow">¶</a></p>
+<p id="section-6.10-6"><strong>TODO</strong> To be discussed: Difference Same-Device Cross-Device where not discussed already.<a href="#section-6.10-6" class="pilcrow">¶</a></p>
+</section>
+</div>
+</section>
+</div>
+<section id="section-7">
+      <h2 id="name-normative-references">
+<a href="#section-7" class="section-number selfRef">7. </a><a href="#name-normative-references" class="section-name selfRef">Normative References</a>
+      </h2>
+<dl class="references">
+<dt id="OAuth.Responses">[OAuth.Responses]</dt>
+      <dd>
+<span class="refAuthor">de Medeiros, B.</span>, <span class="refAuthor">Scurtescu, M.</span>, <span class="refAuthor">Tarjan, P.</span>, and <span class="refAuthor">M. Jones</span>, <span class="refTitle">"OAuth 2.0 Multiple Response Type Encoding Practices"</span>, <time datetime="2014-02-25" class="refDate">25 February 2014</time>, <span>&lt;<a href="https://openid.net/specs/oauth-v2-multiple-response-types-1_0.html">https://openid.net/specs/oauth-v2-multiple-response-types-1_0.html</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="OpenID.SIOPv2">[OpenID.SIOPv2]</dt>
+      <dd>
+<span class="refAuthor">Yasuda, K.</span>, <span class="refAuthor">Jones, M. B.</span>, and <span class="refAuthor">T. Looker</span>, <span class="refTitle">"Self-Issued OpenID Provider V2"</span>, <time datetime="2021-07-20" class="refDate">20 July 2021</time>, <span>&lt;<a href="https://openid.bitbucket.io/connect/openid-connect-self-issued-v2-1_0.html">https://openid.bitbucket.io/connect/openid-connect-self-issued-v2-1_0.html</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="OpenID.VCI">[OpenID.VCI]</dt>
+      <dd>
+<span class="refAuthor">Lodderstedt, T.</span>, <span class="refAuthor">Yasuda, K.</span>, and <span class="refAuthor">T. Looker</span>, <span class="refTitle">"OpenID for Verifiable Credential Issuance"</span>, <time datetime="2022-06-20" class="refDate">20 June 2022</time>, <span>&lt;<a href="https://openid.net/specs/openid-4-verifiable-credential-issuance-1_0.html">https://openid.net/specs/openid-4-verifiable-credential-issuance-1_0.html</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="OpenID.VP">[OpenID.VP]</dt>
+      <dd>
+<span class="refAuthor">Terbu, O.</span>, <span class="refAuthor">Lodderstedt, T.</span>, <span class="refAuthor">Yasuda, K.</span>, and <span class="refAuthor">T. Looker</span>, <span class="refTitle">"OpenID for Verifiable Presentations"</span>, <time datetime="2023-04-21" class="refDate">21 April 2023</time>, <span>&lt;<a href="https://openid.net/specs/openid-4-verifiable-presentations-1_0.html">https://openid.net/specs/openid-4-verifiable-presentations-1_0.html</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC6749">[RFC6749]</dt>
+      <dd>
+<span class="refAuthor">Hardt, D., Ed.</span>, <span class="refTitle">"The OAuth 2.0 Authorization Framework"</span>, <span class="seriesInfo">RFC 6749</span>, <span class="seriesInfo">DOI 10.17487/RFC6749</span>, <time datetime="2012-10" class="refDate">October 2012</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc6749">https://www.rfc-editor.org/info/rfc6749</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC7515">[RFC7515]</dt>
+      <dd>
+<span class="refAuthor">Jones, M.</span>, <span class="refAuthor">Bradley, J.</span>, and <span class="refAuthor">N. Sakimura</span>, <span class="refTitle">"JSON Web Signature (JWS)"</span>, <span class="seriesInfo">RFC 7515</span>, <span class="seriesInfo">DOI 10.17487/RFC7515</span>, <time datetime="2015-05" class="refDate">May 2015</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc7515">https://www.rfc-editor.org/info/rfc7515</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC7519">[RFC7519]</dt>
+    <dd>
+<span class="refAuthor">Jones, M.</span>, <span class="refAuthor">Bradley, J.</span>, and <span class="refAuthor">N. Sakimura</span>, <span class="refTitle">"JSON Web Token (JWT)"</span>, <span class="seriesInfo">RFC 7519</span>, <span class="seriesInfo">DOI 10.17487/RFC7519</span>, <time datetime="2015-05" class="refDate">May 2015</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc7519">https://www.rfc-editor.org/info/rfc7519</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+</dl>
+</section>
+<section id="section-8">
+      <h2 id="name-informative-references">
+<a href="#section-8" class="section-number selfRef">8. </a><a href="#name-informative-references" class="section-name selfRef">Informative References</a>
+      </h2>
+<dl class="references">
+<dt id="Hyperledger.Indy">[Hyperledger.Indy]</dt>
+      <dd>
+<span class="refAuthor">Hyperledger Indy Project</span>, <span class="refTitle">"Hyperledger Indy Project"</span>, <time datetime="2022" class="refDate">2022</time>, <span>&lt;<a href="https://www.hyperledger.org/use/hyperledger-indy">https://www.hyperledger.org/use/hyperledger-indy</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="ISO.18013-5">[ISO.18013-5]</dt>
+      <dd>
+<span class="refAuthor">ISO/IEC JTC 1/SC 17 Cards and security devices for personal identification</span>, <span class="refTitle">"ISO/IEC 18013-5:2021 Personal identification — ISO-compliant driving licence — Part 5: Mobile driving licence (mDL) application"</span>, <time datetime="2021" class="refDate">2021</time>, <span>&lt;<a href="https://www.iso.org/standard/69084.html">https://www.iso.org/standard/69084.html</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="OpenID.Core">[OpenID.Core]</dt>
+      <dd>
+<span class="refAuthor">Sakimura, N.</span>, <span class="refAuthor">Bradley, J.</span>, <span class="refAuthor">Jones, M.</span>, <span class="refAuthor">de Medeiros, B.</span>, and <span class="refAuthor">C. Mortimore</span>, <span class="refTitle">"OpenID Connect Core 1.0 incorporating errata set 1"</span>, <time datetime="2014-11-08" class="refDate">8 November 2014</time>, <span>&lt;<a href="http://openid.net/specs/openid-connect-core-1_0.html">http://openid.net/specs/openid-connect-core-1_0.html</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC9207">[RFC9207]</dt>
+      <dd>
+<span class="refAuthor">Meyer zu Selhausen, K.</span> and <span class="refAuthor">D. Fett</span>, <span class="refTitle">"OAuth 2.0 Authorization Server Issuer Identification"</span>, <span class="seriesInfo">RFC 9207</span>, <span class="seriesInfo">DOI 10.17487/RFC9207</span>, <time datetime="2022-03" class="refDate">March 2022</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc9207">https://www.rfc-editor.org/info/rfc9207</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="VC_DATA">[VC_DATA]</dt>
+    <dd>
+<span class="refAuthor">Sporny, M.</span>, <span class="refAuthor">Noble, G.</span>, <span class="refAuthor">Longley, D.</span>, <span class="refAuthor">Burnett, D. C.</span>, <span class="refAuthor">Zundel, B.</span>, and <span class="refAuthor">D. Chadwick</span>, <span class="refTitle">"Verifiable Credentials Data Model 1.0"</span>, <time datetime="2019-11-19" class="refDate">19 November 2019</time>, <span>&lt;<a href="https://www.w3.org/TR/vc-data-model">https://www.w3.org/TR/vc-data-model</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+</dl>
+</section>
+<div id="authors-addresses">
+<section id="appendix-A">
+      <h2 id="name-authors-addresses">
+<a href="#name-authors-addresses" class="section-name selfRef">Authors' Addresses</a>
+      </h2>
+<address class="vcard">
+        <div dir="auto" class="left"><span class="fn nameRole">Daniel Fett</span></div>
+<div dir="auto" class="left"><span class="org">yes.com</span></div>
+<div class="email">
+<span>Email:</span>
+<a href="mailto:mail@danielfett.de" class="email">mail@danielfett.de</a>
+</div>
+</address>
+<address class="vcard">
+        <div dir="auto" class="left"><span class="fn nameRole">Torsten Lodderstedt</span></div>
+<div dir="auto" class="left"><span class="org">yes.com</span></div>
+<div class="email">
+<span>Email:</span>
+<a href="mailto:torsten@lodderstedt.net" class="email">torsten@lodderstedt.net</a>
+</div>
+</address>
+</section>
+</div>
+<script>const toc = document.getElementById("toc");
+toc.querySelector("h2").addEventListener("click", e => {
+  toc.classList.toggle("active");
+});
+toc.querySelector("nav").addEventListener("click", e => {
+  toc.classList.remove("active");
+});
+</script>
+</body>
+</html>
