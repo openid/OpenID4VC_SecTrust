@@ -2,10 +2,7 @@
 
 This is the working area for the individual Internet-Draft, "Security and Trust in OpenID for Verifiable Credentials Ecosystems".
 
-* [Editor's Copy](https://vcstuff.github.io/oid4vc-security-and-trust/#go.draft-oid4vc-security-and-trust.html)
-* [Datatracker Page](https://datatracker.ietf.org/doc/draft-oid4vc-security-and-trust)
-* [Individual Draft](https://datatracker.ietf.org/doc/html/draft-oid4vc-security-and-trust)
-* [Compare Editor's Copy to Individual Draft](https://vcstuff.github.io/oid4vc-security-and-trust/#go.draft-oid4vc-security-and-trust.diff)
+* [Editor's Copy](https://openid.github.io/OpenID4VC_SecTrust/draft-oid4vc-security-and-trust.html)
 
 
 ## Contributing
