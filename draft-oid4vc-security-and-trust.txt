@@ -3,9 +3,10 @@
 
 
 connect                                                          D. Fett
+                                                           Authlete Inc.
                                                           T. Lodderstedt
-                                                                 yes.com
-                                                          14 August 2023
+                                                                  SPRIND
+                                                           14 March 2024
 
 
    Security and Trust in OpenID for Verifiable Credentials Ecosystems
@@ -72,8 +73,9 @@ Table of Contents
      6.8.  Security/Privacy Requirement P-60
      6.9.  Security/Privacy Requirement P-70
      6.10. Privacy Requirement P-80
-   7.  Normative References
-   8.  Informative References
+   7.  References
+     7.1.  Normative References
+     7.2.  Informative References
    Authors' Addresses
 
 1.  Introduction
@@ -107,47 +109,38 @@ Table of Contents
       Credential Issuer.  Note that this definition of a term
       "Credential" in this specification is different from that in
       [OpenID.Core].
-
    Verifiable Credential (VC):  An Issuer-signed Credential whose
       authenticity can be cryptographically verified.  Can be of any
       format used in the Issuer-Holder-Verifier Model, including, but
       not limited to those defined in [VC_DATA], [ISO.18013-5] (mdoc)
       and [Hyperledger.Indy] (AnonCreds).
-
    Presentation:  Data that is shared with a specific Verifier, derived
       from one or more Verifiable Credentials that can be from the same
       or different issuers.
-
    Verifiable Presentation (VP):  A Holder-signed Credential whose
       authenticity can be cryptographically verified to provide
       Cryptographic Holder Binding.  Can be of any format used in the
       Issuer-Holder-Verifier Model, including, but not limited to those
       defined in [VC_DATA], [ISO.18013-5] (mdoc) and [Hyperledger.Indy]
       (AnonCreds).
-
    Credential Issuer:  An entity that issues Verifiable Credentials.
       Also called Issuer.
-
    Holder:  An entity that receives Verifiable Credentials and has
       control over them to present them to the Verifiers as Verifiable
       Presentations.
-
    Verifier:  An entity that requests, receives and validates Verifiable
       Presentations.  During presentation of Credentials, Verifier acts
       as an OAuth 2.0 Client towards the Wallet that is acting as an
       OAuth 2.0 Authorization Server.  The Verifier is a specific case
       of OAuth 2.0 Client, just like Relying Party (RP) in
       [OpenID.Core].
-
    Issuer-Holder-Verifier Model:  A model for claims sharing where
       claims are issued in the form of Verifiable Credentials
       independent of the process of presenting them as Verifiable
       Presentation to the Verifiers.  An issued Verifiable Credential
       can (but must not necessarily) be used multiple times.
-
    Holder Binding:  Ability of the Holder to prove legitimate possession
       of a Verifiable Credential.
-
    Wallet:  An entity used by the Holder to receive, store, present, and
       manage Verifiable Credentials and key material.  There is no
       single deployment model of a Wallet: Verifiable Credentials and
@@ -196,48 +189,37 @@ Table of Contents
    different parties.
 
    *  *For Verifiers:*
-
       -  *Issuer Identification:* The Verifier can identify the Issuer
          to such a degree that it can trust that the Issuer is the
          entity it claims to be.
-
       -  *Authenticity of Claims:* A Verifier can trust that the set of
          presented claims was correctly issued by a specific Issuer and
          not altered by the Holder or a malicious party.
-
       -  *Identity of Holder:* A Verifier can trust that the party
          presenting the claims in a session with the Verifier is
          (controlled by) the subject of the claims.  If this assurance
          is required, it is typically achieved by enforcing Holder
          Binding and trusting the Issuer to issue Credentials only to
          the End-Users they are about (see below).
-
       -  *Integrity of Interaction:* When interacting with a Wallet, the
          Verifier can trust that it receives whatever data this Holder
          wants to release for the specific session, not forged data from
          a third party and not data from a different session with the
          same Holder.
-
    *  *For Holders/End-Users:*
-
       -  *Privacy (I):* A Holder can trust that no party learns any
          claims except Verifiers to whom the Holder has explicitly
          released the claims.
-
       -  *Privacy (II):* A Holder can trust that a Verifier only learns
          the claims that it intends to release to the Verifier and not
          more.
-
       -  *Context (incl.  Verifier Identification):* A Holder, when
          presenting Credentials, can identify which Verifier receives
          the data and for which session the data is released (if there
          is more than one).
-
       -  *Correctness of Claims:* A Holder can trust that the claims in
          a Credential are correct and not modified by a malicious party.
-
    *  *For Issuers:*
-
       -  *Wallet Integrity:* For the protection of the issuer-created
          Credentials, the issuer trusts that Wallet does not misuse the
          data of the user.
@@ -251,7 +233,6 @@ Table of Contents
    *  A malicious party that has gained access to a Credential (e.g.,
       data leaked from a connection or from a Verifier) can present it
       to a Verifier and thus impersonate the legitimate End-User.
-
    *  A Verifier that acts in a benign way towards an End-User but
       misuses the presented Credentials can impersonate a legitimate
       End-User.
@@ -269,13 +250,11 @@ Table of Contents
       or id cards.  During presentation, the Verifier compares the data
       in the Credential with the respective biometric traits of the
       presenter.
-
    *  *Claim-based Binding* via holder-related claims.  E.g. a diploma
       might be bound to a person named "Erika Mustermann".  This binding
       requires a primary Credential to prove the presenter's identity
       which in turn is bound to the legitimate holder using either
       biometric or cryptographic holder binding or both.
-
    *  *Cryptographic Binding*, i.e., the Credential is directly or
       indirectly bound to key material under the control of the
       legitimate holder.  Only if the presenter can prove possession of
@@ -673,7 +652,6 @@ Table of Contents
 
    *  Direct: The Verifier checks the trustworthiness of the Wallet
       directly by, for example, requiring an attested key management.
-
    *  Indirect: The Verifier trusts the Issuer to only issue credentials
       to wallets that implement the key management securely.
 
@@ -960,15 +938,13 @@ Table of Contents
 
    OpenID for VC consists of three protocols:
 
-   *  OpenID for Verifiable Credential Issuance - Defines an API and
+   *  OpenID for Verifiable Credential Issuance – Defines an API and
       corresponding OAuth-based authorization mechanisms for issuance of
       Verifiable Credentials
-
-   *  OpenID for Verifiable Presentations - Defines a mechanism on top
+   *  OpenID for Verifiable Presentations – Defines a mechanism on top
       of OAuth 2.0 to allow presentation of claims in the form of
       Verifiable Credentials as part of the protocol flow
-
-   *  Self-Issued OpenID Provider v2 - Enables End-Users to use OpenID
+   *  Self-Issued OpenID Provider v2 – Enables End-Users to use OpenID
       Providers (OPs) that they control
 
    The following analysis aims to show that OpenID for VC meets the
@@ -1006,21 +982,15 @@ Table of Contents
    No Mix-Up:
 
    *  credential_issuer: Attacker's Credential Issuer Identifier
-
    *  authorization_server: Attacker's Authorization Server
-
    *  credential_endpoint: Attacker's Credential Endpoint
-
    *  batch_credential_endpoint: Attacker's Batch Credential Endpoint
 
    Mix-Up Type 1:
 
    *  credential_issuer: Attacker's Credential Issuer Identifier
-
    *  authorization_server: Honest Issuer's Authorization Server
-
    *  credential_endpoint: Attacker-controlled Credential Endpoint
-
    *  batch_credential_endpoint: Attacker-controlled Batch Credential
       Endpoint
 
@@ -1030,11 +1000,8 @@ Table of Contents
    Mix-Up Type 2:
 
    *  credential_issuer: Attacker's Credential Issuer Identifier
-
    *  authorization_server: Attacker-controlled Authorization Server
-
    *  credential_endpoint: Honest Issuer's Credential Endpoint
-
    *  batch_credential_endpoint: Honest Issuer's Batch Credential
       Endpoint
 
@@ -1063,10 +1030,8 @@ Table of Contents
 
    *  The credential endpoint can send a credential response containing
       a credential,
-
    *  the batch credential endpoint can send a batch credential response
       containing multiple credentials, or
-
    *  the deferred credential endpoint can send a a credential response
       containing a credential.
 
@@ -1355,7 +1320,6 @@ Table of Contents
    1.  The Verifier specifies the redirect URI in the request to the
        Wallet.  The request is signed using a key that the Wallet can
        verify and show the proper name of the Verifier to the user.
-
    2.  The redirect URI is registered beforehand and therefore
        guaranteed to be authentic.
 
@@ -1390,7 +1354,6 @@ Table of Contents
       to the Verifier in order to avoid correlation.  The point in time
       when such an interaction happens may leak information about the
       Wallet's actions, but is usually a weak correlation vector.
-
    *  The Verifier may need to retrieve a signature verification key,
       revocation information or other data from the Issuer before
       verifying the credential.  This is not a privacy concern, but may
@@ -1405,7 +1368,9 @@ Table of Contents
    *TODO* To be discussed: Difference Same-Device Cross-Device where not
    discussed already.
 
-7.  Normative References
+7.  References
+
+7.1.  Normative References
 
    [OAuth.Responses]
               de Medeiros, B., Scurtescu, M., Tarjan, P., and M. Jones,
@@ -1443,7 +1408,7 @@ Table of Contents
               (JWT)", RFC 7519, DOI 10.17487/RFC7519, May 2015,
               <https://www.rfc-editor.org/info/rfc7519>.
 
-8.  Informative References
+7.2.  Informative References
 
    [Hyperledger.Indy]
               Hyperledger Indy Project, "Hyperledger Indy Project",
@@ -1475,10 +1440,10 @@ Table of Contents
 Authors' Addresses
 
    Daniel Fett
-   yes.com
+   Authlete Inc.
    Email: mail@danielfett.de
 
 
    Torsten Lodderstedt
-   yes.com
+   SPRIND
    Email: torsten@lodderstedt.net

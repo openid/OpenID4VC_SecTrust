@@ -13,26 +13,26 @@ Verifiable Credentials ( ,  ,  ), outlines security considerations and
 requirements for the components in an ecosystem, and provides an
 informal security analysis of the OpenID for VC protocols. 
     " name="description">
-<meta content="xml2rfc 3.17.5" name="generator">
+<meta content="xml2rfc 3.20.0" name="generator">
 <meta content="security" name="keyword">
 <meta content="openid" name="keyword">
 <meta content="ssi" name="keyword">
 <meta content="draft-oid4vc-security-and-trust-latest" name="ietf.draft">
 <!-- Generator version information:
-  xml2rfc 3.17.5
-    Python 3.11.4
-    ConfigArgParse 1.5.3
+  xml2rfc 3.20.0
+    Python 3.11.8
+    ConfigArgParse 1.7
     google-i18n-address 3.1.0
     intervaltree 3.1.0
     Jinja2 3.1.2
     lxml 4.9.3
-    platformdirs 3.10.0
+    platformdirs 4.2.0
     pycountry 22.3.5
-    PyYAML 6.0
+    PyYAML 6.0.1
     requests 2.31.0
-    setuptools 67.7.2
+    setuptools 68.2.2
     six 1.16.0
-    wcwidth 0.2.6
+    wcwidth 0.2.13
 -->
 <link href="draft-oid4vc-security-and-trust.xml" rel="alternate" type="application/rfc+xml">
 <link href="#copyright" rel="license">
@@ -655,7 +655,7 @@ sub, sup {
 }
 #toc nav li {
   line-height: 1.3em;
-  margin: 0.75em 0;
+  margin: 2px 0;
   padding-left: 1.2em;
   text-indent: -1.2em;
 }
@@ -748,7 +748,7 @@ hr.addr {
     z-index: 2;
     top: 0;
     right: 0;
-    padding: 0;
+    padding: 1px 0 0 0;
     margin: 0;
     border-bottom: 1px solid #ccc;
     opacity: 0.6;
@@ -872,16 +872,13 @@ hr.addr {
     border-top: none;
     padding-top: 0;
   }
-  figure, pre {
+  figure, pre, .vcard {
     page-break-inside: avoid;
-  }
-  figure {
-    overflow: scroll;
   }
   h1, h2, h3, h4, h5, h6 {
     page-break-after: avoid;
   }
-  h2+*, h3+*, h4+*, h5+*, h6+* {
+  :is(h2, h3, h4, h5, h6)+*, dd {
     page-break-before: avoid;
   }
   pre {
@@ -894,6 +891,9 @@ hr.addr {
   }
   td {
     border-top: 1px solid #ddd;
+  }
+  .toplink {
+    display: none;
   }
 }
 
@@ -995,28 +995,6 @@ address div.right {
   text-align: right;
 }
 
-/* Give the table caption label the same styling as the figcaption */
-
-@media print {
-  .toplink {
-    display: none;
-  }
-
-  /* avoid overwriting the top border line with the ToC header */
-  #toc {
-    padding-top: 1px;
-  }
-
-  /* Avoid page breaks inside dl and author address entries */
-  dd {
-    page-break-before: avoid;
-  }
-  .vcard {
-    page-break-inside: avoid;
-  }
-
-}
-
 /* Dark mode. */
 @media (prefers-color-scheme: dark) {
 :root {
@@ -1053,7 +1031,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <thead><tr>
 <td class="left"></td>
 <td class="center">draft-oid4vc-security-and-trust-latest</td>
-<td class="right">August 2023</td>
+<td class="right">March 2024</td>
 </tr></thead>
 <tfoot><tr>
 <td class="left">Fett &amp; Lodderstedt</td>
@@ -1068,17 +1046,17 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="workgroup">connect</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2023-08-14" class="published">14 August 2023</time>
+<time datetime="2024-03-14" class="published">14 March 2024</time>
     </dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
       <div class="author-name">D. Fett</div>
-<div class="org">yes.com</div>
+<div class="org">Authlete Inc.</div>
 </div>
 <div class="author">
       <div class="author-name">T. Lodderstedt</div>
-<div class="org">yes.com</div>
+<div class="org">SPRIND</div>
 </div>
 </dd>
 </dl>
@@ -1260,13 +1238,18 @@ informal security analysis of the OpenID for VC protocols.<a href="#section-abst
             </ul>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7">
-            <p id="section-toc.1-1.7.1"><a href="#section-7" class="auto internal xref">7</a>.  <a href="#name-normative-references" class="internal xref">Normative References</a></p>
+            <p id="section-toc.1-1.7.1"><a href="#section-7" class="auto internal xref">7</a>.  <a href="#name-references" class="internal xref">References</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7.2.1">
+                <p id="section-toc.1-1.7.2.1.1"><a href="#section-7.1" class="auto internal xref">7.1</a>.  <a href="#name-normative-references" class="internal xref">Normative References</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7.2.2">
+                <p id="section-toc.1-1.7.2.2.1"><a href="#section-7.2" class="auto internal xref">7.2</a>.  <a href="#name-informative-references" class="internal xref">Informative References</a></p>
+</li>
+            </ul>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8">
-            <p id="section-toc.1-1.8.1"><a href="#section-8" class="auto internal xref">8</a>.  <a href="#name-informative-references" class="internal xref">Informative References</a></p>
-</li>
-          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.9">
-            <p id="section-toc.1-1.9.1"><a href="#appendix-A" class="auto internal xref"></a><a href="#name-authors-addresses" class="internal xref">Authors' Addresses</a></p>
+            <p id="section-toc.1-1.8.1"><a href="#appendix-A" class="auto internal xref"></a><a href="#name-authors-addresses" class="internal xref">Authors' Addresses</a></p>
 </li>
         </ul>
 </nav>
@@ -1300,7 +1283,7 @@ Web Token (JWT)" defined by JSON Web Token (JWT) <span>[<a href="#RFC7519" class
 Signature (JWS) <span>[<a href="#RFC7515" class="cite xref">RFC7515</a>]</span>, and the term "Response Mode" defined by
 OAuth 2.0 Multiple Response Type Encoding Practices <span>[<a href="#OAuth.Responses" class="cite xref">OAuth.Responses</a>]</span>.<a href="#section-2-2" class="pilcrow">¶</a></p>
 <p id="section-2-3">This specification also uses the following terms defined in <span>[<a href="#OpenID.VP" class="cite xref">OpenID.VP</a>]</span> and <span>[<a href="#OpenID.VCI" class="cite xref">OpenID.VCI</a>]</span>.<a href="#section-2-3" class="pilcrow">¶</a></p>
-<span class="break"></span><dl class="dlParallel" id="section-2-4">
+<span class="break"></span><dl class="dlCompact dlParallel" id="section-2-4">
         <dt id="section-2-4.1">Credential:</dt>
         <dd style="margin-left: 1.5em" id="section-2-4.2">A set of one or more claims about a subject made by a Credential Issuer. Note that this definition of a term "Credential" in this specification is different from that in <span>[<a href="#OpenID.Core" class="cite xref">OpenID.Core</a>]</span>.<a href="#section-2-4.2" class="pilcrow">¶</a>
 </dd>
@@ -1376,21 +1359,21 @@ Presentations <span>[<a href="#OpenID.VP" class="cite xref">OpenID.VP</a>]</span
         </h3>
 <p id="section-3.1-1">Trust in the Issuer-Holder-Verifier Model means different things to
 different parties.<a href="#section-3.1-1" class="pilcrow">¶</a></p>
-<ul class="normal">
-<li class="normal" id="section-3.1-2.1">
+<ul class="compact">
+<li class="compact" id="section-3.1-2.1">
             <p id="section-3.1-2.1.1"><strong>For Verifiers:</strong><a href="#section-3.1-2.1.1" class="pilcrow">¶</a></p>
-<ul class="normal">
-<li class="normal" id="section-3.1-2.1.2.1">
+<ul class="compact">
+<li class="compact" id="section-3.1-2.1.2.1">
                 <strong>Issuer Identification:</strong> The Verifier can identify the Issuer to
 such a degree that it can trust that the Issuer is the entity it
 claims to be.<a href="#section-3.1-2.1.2.1" class="pilcrow">¶</a>
 </li>
-              <li class="normal" id="section-3.1-2.1.2.2">
+              <li class="compact" id="section-3.1-2.1.2.2">
                 <strong>Authenticity of Claims:</strong> A Verifier can trust that the set of
 presented claims was correctly issued by a specific Issuer and not
 altered by the Holder or a malicious party.<a href="#section-3.1-2.1.2.2" class="pilcrow">¶</a>
 </li>
-              <li class="normal" id="section-3.1-2.1.2.3">
+              <li class="compact" id="section-3.1-2.1.2.3">
                 <strong>Identity of Holder:</strong> A Verifier can trust that the party
 presenting the claims in a session with the Verifier is
 (controlled by) the subject of the claims. If this assurance is
@@ -1398,7 +1381,7 @@ required, it is typically achieved by enforcing Holder Binding and
 trusting the Issuer to issue Credentials only to the End-Users
 they are about (see below).<a href="#section-3.1-2.1.2.3" class="pilcrow">¶</a>
 </li>
-              <li class="normal" id="section-3.1-2.1.2.4">
+              <li class="compact" id="section-3.1-2.1.2.4">
                 <strong>Integrity of Interaction:</strong> When interacting with a Wallet, the
 Verifier can trust that it receives whatever data this Holder
 wants to release for the specific session, not forged data from a
@@ -1407,34 +1390,34 @@ Holder.<a href="#section-3.1-2.1.2.4" class="pilcrow">¶</a>
 </li>
             </ul>
 </li>
-          <li class="normal" id="section-3.1-2.2">
+          <li class="compact" id="section-3.1-2.2">
             <p id="section-3.1-2.2.1"><strong>For Holders/End-Users:</strong><a href="#section-3.1-2.2.1" class="pilcrow">¶</a></p>
-<ul class="normal">
-<li class="normal" id="section-3.1-2.2.2.1">
+<ul class="compact">
+<li class="compact" id="section-3.1-2.2.2.1">
                 <strong>Privacy (I):</strong> A Holder can trust that no party learns any
 claims except Verifiers to whom the Holder has explicitly released
 the claims.<a href="#section-3.1-2.2.2.1" class="pilcrow">¶</a>
 </li>
-              <li class="normal" id="section-3.1-2.2.2.2">
+              <li class="compact" id="section-3.1-2.2.2.2">
                 <strong>Privacy (II):</strong> A Holder can trust that a Verifier only learns the
 claims that it intends to release to the Verifier and not more.<a href="#section-3.1-2.2.2.2" class="pilcrow">¶</a>
 </li>
-              <li class="normal" id="section-3.1-2.2.2.3">
+              <li class="compact" id="section-3.1-2.2.2.3">
                 <strong>Context (incl. Verifier Identification):</strong> A Holder, when presenting Credentials, can identify
 which Verifier receives the data and for which session the data is
 released (if there is more than one).<a href="#section-3.1-2.2.2.3" class="pilcrow">¶</a>
 </li>
-              <li class="normal" id="section-3.1-2.2.2.4">
+              <li class="compact" id="section-3.1-2.2.2.4">
                 <strong>Correctness of Claims:</strong> A Holder can trust that the claims in a
 Credential are correct and not modified by a
 malicious party.<a href="#section-3.1-2.2.2.4" class="pilcrow">¶</a>
 </li>
             </ul>
 </li>
-          <li class="normal" id="section-3.1-2.3">
+          <li class="compact" id="section-3.1-2.3">
             <p id="section-3.1-2.3.1"><strong>For Issuers:</strong><a href="#section-3.1-2.3.1" class="pilcrow">¶</a></p>
-<ul class="normal">
-<li class="normal" id="section-3.1-2.3.2.1">
+<ul class="compact">
+<li class="compact" id="section-3.1-2.3.2.1">
                 <strong>Wallet Integrity:</strong> For the protection of the issuer-created Credentials,
 the issuer trusts that Wallet does not misuse the data of the user.<a href="#section-3.1-2.3.2.1" class="pilcrow">¶</a>
 </li>
@@ -1451,12 +1434,12 @@ the issuer trusts that Wallet does not misuse the data of the user.<a href="#sec
 <p id="section-3.2-1">Depending on the use case, the Verifier needs to trust the End-User
 to be the legitimate holder of a certain Credential. Accepting a
 Credential from any bearer is a security risk:<a href="#section-3.2-1" class="pilcrow">¶</a></p>
-<ul class="normal">
-<li class="normal" id="section-3.2-2.1">A malicious party that has gained access to a Credential (e.g., data
+<ul class="compact">
+<li class="compact" id="section-3.2-2.1">A malicious party that has gained access to a Credential (e.g., data
 leaked from a connection or from a Verifier) can present it to a
 Verifier and thus impersonate the legitimate End-User.<a href="#section-3.2-2.1" class="pilcrow">¶</a>
 </li>
-          <li class="normal" id="section-3.2-2.2">A Verifier that acts in a benign way towards an End-User but misuses
+          <li class="compact" id="section-3.2-2.2">A Verifier that acts in a benign way towards an End-User but misuses
 the presented Credentials can impersonate a legitimate End-User.<a href="#section-3.2-2.2" class="pilcrow">¶</a>
 </li>
         </ul>
@@ -1465,21 +1448,21 @@ breach, could pose as the legitimate End-User for a long time.<a href="#section-
 <p id="section-3.2-4">Therefore, Credentials are usually bound to the legitimate End-User,
 also known as "holder binding". There are three ways to bind the
 Credential to its legitimate holder:<a href="#section-3.2-4" class="pilcrow">¶</a></p>
-<ul class="normal">
-<li class="normal" id="section-3.2-5.1">
+<ul class="compact">
+<li class="compact" id="section-3.2-5.1">
             <strong>Biometric Holder Binding</strong>, e.g., via a passport photo. This method
 is well known from physical Credentials such as passports or id
 cards. During presentation, the Verifier compares the data in the
 Credential with the respective biometric traits of the presenter.<a href="#section-3.2-5.1" class="pilcrow">¶</a>
 </li>
-          <li class="normal" id="section-3.2-5.2">
+          <li class="compact" id="section-3.2-5.2">
             <strong>Claim-based Binding</strong> via holder-related claims. E.g. a diploma
 might be bound to a person named "Erika Mustermann". This binding
 requires a primary Credential to prove the presenter's identity which
 in turn is bound to the legitimate holder using either biometric or
 cryptographic holder binding or both.<a href="#section-3.2-5.2" class="pilcrow">¶</a>
 </li>
-          <li class="normal" id="section-3.2-5.3">
+          <li class="compact" id="section-3.2-5.3">
             <strong>Cryptographic Binding</strong>, i.e., the Credential is directly or
 indirectly bound to key material under the control of the legitimate
 holder. Only if the presenter can prove possession of the private key
@@ -1886,11 +1869,11 @@ challenge consisting of a nonce and an identifier for the Verifier.<a href="#sec
 <a href="#section-4.4" class="section-number selfRef">4.4. </a><a href="#name-ensuring-secure-storage-of-" class="section-name selfRef">Ensuring Secure Storage of Credentials</a>
         </h3>
 <p id="section-4.4-1">Ensuring secure credential storage can be achieved in one of two ways:<a href="#section-4.4-1" class="pilcrow">¶</a></p>
-<ul class="normal">
-<li class="normal" id="section-4.4-2.1">Direct: The Verifier checks the trustworthiness of the Wallet
+<ul class="compact">
+<li class="compact" id="section-4.4-2.1">Direct: The Verifier checks the trustworthiness of the Wallet
 directly by, for example, requiring an attested key management.<a href="#section-4.4-2.1" class="pilcrow">¶</a>
 </li>
-          <li class="normal" id="section-4.4-2.2">Indirect: The Verifier trusts the Issuer to only issue credentials to
+          <li class="compact" id="section-4.4-2.2">Indirect: The Verifier trusts the Issuer to only issue credentials to
 wallets that implement the key management securely.<a href="#section-4.4-2.2" class="pilcrow">¶</a>
 </li>
         </ul>
@@ -2334,16 +2317,16 @@ Issuance.<a href="#section-5.2-2" class="pilcrow">¶</a></p>
 <a href="#section-6" class="section-number selfRef">6. </a><a href="#name-protocol-analysis-openid-fo" class="section-name selfRef">Protocol Analysis OpenID for VC</a>
       </h2>
 <p id="section-6-1">OpenID for VC consists of three protocols:<a href="#section-6-1" class="pilcrow">¶</a></p>
-<ul class="normal">
-<li class="normal" id="section-6-2.1">OpenID for Verifiable Credential Issuance - Defines an API and
+<ul class="compact">
+<li class="compact" id="section-6-2.1">OpenID for Verifiable Credential Issuance – Defines an API and
 corresponding OAuth-based authorization mechanisms for issuance of
 Verifiable Credentials<a href="#section-6-2.1" class="pilcrow">¶</a>
 </li>
-        <li class="normal" id="section-6-2.2">OpenID for Verifiable Presentations - Defines a mechanism on top of
+        <li class="compact" id="section-6-2.2">OpenID for Verifiable Presentations – Defines a mechanism on top of
 OAuth 2.0 to allow presentation of claims in the form of Verifiable
 Credentials as part of the protocol flow<a href="#section-6-2.2" class="pilcrow">¶</a>
 </li>
-        <li class="normal" id="section-6-2.3">Self-Issued OpenID Provider v2 - Enables End-Users to use OpenID
+        <li class="compact" id="section-6-2.3">Self-Issued OpenID Provider v2 – Enables End-Users to use OpenID
 Providers (OPs) that they control<a href="#section-6-2.3" class="pilcrow">¶</a>
 </li>
       </ul>
@@ -2378,49 +2361,49 @@ issuer metadata (cf. Section 10.2. in OID4VCI) under their control
 according to the following list:<a href="#section-6.1.1-1" class="pilcrow">¶</a></p>
 <p id="section-6.1.1-2"><strong>TODO</strong>: Deferred Credential Endpoint metadata needs to be defined in OID4VCI spec.<a href="#section-6.1.1-2" class="pilcrow">¶</a></p>
 <p id="section-6.1.1-3">No Mix-Up:<a href="#section-6.1.1-3" class="pilcrow">¶</a></p>
-<ul class="normal">
-<li class="normal" id="section-6.1.1-4.1">
+<ul class="compact">
+<li class="compact" id="section-6.1.1-4.1">
               <code>credential_issuer</code>: Attacker's Credential Issuer Identifier<a href="#section-6.1.1-4.1" class="pilcrow">¶</a>
 </li>
-            <li class="normal" id="section-6.1.1-4.2">
+            <li class="compact" id="section-6.1.1-4.2">
               <code>authorization_server</code>: Attacker's Authorization Server<a href="#section-6.1.1-4.2" class="pilcrow">¶</a>
 </li>
-            <li class="normal" id="section-6.1.1-4.3">
+            <li class="compact" id="section-6.1.1-4.3">
               <code>credential_endpoint</code>: Attacker's Credential Endpoint<a href="#section-6.1.1-4.3" class="pilcrow">¶</a>
 </li>
-            <li class="normal" id="section-6.1.1-4.4">
+            <li class="compact" id="section-6.1.1-4.4">
               <code>batch_credential_endpoint</code>: Attacker's Batch Credential Endpoint<a href="#section-6.1.1-4.4" class="pilcrow">¶</a>
 </li>
           </ul>
 <p id="section-6.1.1-5">Mix-Up Type 1:<a href="#section-6.1.1-5" class="pilcrow">¶</a></p>
-<ul class="normal">
-<li class="normal" id="section-6.1.1-6.1">
+<ul class="compact">
+<li class="compact" id="section-6.1.1-6.1">
               <code>credential_issuer</code>: Attacker's Credential Issuer Identifier<a href="#section-6.1.1-6.1" class="pilcrow">¶</a>
 </li>
-            <li class="normal" id="section-6.1.1-6.2">
+            <li class="compact" id="section-6.1.1-6.2">
               <code>authorization_server</code>: Honest Issuer's Authorization Server<a href="#section-6.1.1-6.2" class="pilcrow">¶</a>
 </li>
-            <li class="normal" id="section-6.1.1-6.3">
+            <li class="compact" id="section-6.1.1-6.3">
               <code>credential_endpoint</code>: Attacker-controlled Credential Endpoint<a href="#section-6.1.1-6.3" class="pilcrow">¶</a>
 </li>
-            <li class="normal" id="section-6.1.1-6.4">
+            <li class="compact" id="section-6.1.1-6.4">
               <code>batch_credential_endpoint</code>: Attacker-controlled Batch Credential
 Endpoint<a href="#section-6.1.1-6.4" class="pilcrow">¶</a>
 </li>
           </ul>
 <p id="section-6.1.1-7"><strong>TODO</strong> 1a, Variant of Type 1: Only deferred endpoint it attacker-controlled.<a href="#section-6.1.1-7" class="pilcrow">¶</a></p>
 <p id="section-6.1.1-8">Mix-Up Type 2:<a href="#section-6.1.1-8" class="pilcrow">¶</a></p>
-<ul class="normal">
-<li class="normal" id="section-6.1.1-9.1">
+<ul class="compact">
+<li class="compact" id="section-6.1.1-9.1">
               <code>credential_issuer</code>: Attacker's Credential Issuer Identifier<a href="#section-6.1.1-9.1" class="pilcrow">¶</a>
 </li>
-            <li class="normal" id="section-6.1.1-9.2">
+            <li class="compact" id="section-6.1.1-9.2">
               <code>authorization_server</code>: Attacker-controlled Authorization Server<a href="#section-6.1.1-9.2" class="pilcrow">¶</a>
 </li>
-            <li class="normal" id="section-6.1.1-9.3">
+            <li class="compact" id="section-6.1.1-9.3">
               <code>credential_endpoint</code>: Honest Issuer's Credential Endpoint<a href="#section-6.1.1-9.3" class="pilcrow">¶</a>
 </li>
-            <li class="normal" id="section-6.1.1-9.4">
+            <li class="compact" id="section-6.1.1-9.4">
               <code>batch_credential_endpoint</code>: Honest Issuer's Batch Credential Endpoint<a href="#section-6.1.1-9.4" class="pilcrow">¶</a>
 </li>
           </ul>
@@ -2448,14 +2431,14 @@ credential issued by the Issuer.<a href="#section-6.2-1.1" class="pilcrow">¶</a
 <p id="section-6.2-3">On top of TLS, the protocol uses an OAuth 2.0 flow to authorize the
 release of a credential.<a href="#section-6.2-3" class="pilcrow">¶</a></p>
 <p id="section-6.2-4">Credentials can be released at one of three issuance endpoints:<a href="#section-6.2-4" class="pilcrow">¶</a></p>
-<ul class="normal">
-<li class="normal" id="section-6.2-5.1">The credential endpoint can send a credential response containing a
+<ul class="compact">
+<li class="compact" id="section-6.2-5.1">The credential endpoint can send a credential response containing a
 credential,<a href="#section-6.2-5.1" class="pilcrow">¶</a>
 </li>
-          <li class="normal" id="section-6.2-5.2">the batch credential endpoint can send a batch credential response
+          <li class="compact" id="section-6.2-5.2">the batch credential endpoint can send a batch credential response
 containing multiple credentials, or<a href="#section-6.2-5.2" class="pilcrow">¶</a>
 </li>
-          <li class="normal" id="section-6.2-5.3">the deferred credential endpoint can send a a credential response
+          <li class="compact" id="section-6.2-5.3">the deferred credential endpoint can send a a credential response
 containing a credential.<a href="#section-6.2-5.3" class="pilcrow">¶</a>
 </li>
         </ul>
@@ -2756,7 +2739,7 @@ sent to an attacker-controlled endpoint.<a href="#section-6.8-4" class="pilcrow"
 <p id="section-6.8-5">The authentication response is sent to the redirect URI specified in
 the request to the Wallet.<a href="#section-6.8-5" class="pilcrow">¶</a></p>
 <p id="section-6.8-6">There are two options for the verification of the redirect URI:<a href="#section-6.8-6" class="pilcrow">¶</a></p>
-<ol start="1" type="1" class="normal type-1" id="section-6.8-7">
+<ol start="1" type="1" class="compact type-1" id="section-6.8-7">
 <li id="section-6.8-7.1">The Verifier specifies the redirect URI in the request to the
 Wallet. The request is signed using a key that the Wallet can verify
 and show the proper name of the Verifier to the user.<a href="#section-6.8-7.1" class="pilcrow">¶</a>
@@ -2796,8 +2779,8 @@ End-User uses the Credential.<a href="#section-6.10-1.1" class="pilcrow">¶</a><
 <p id="section-6.10-2">The interaction between the Wallet and the Verifier is not inherently
 tied to any interaction between either the Wallet and the Issuer or the
 Verifier and the Issuer, with the following (potential) exceptions:<a href="#section-6.10-2" class="pilcrow">¶</a></p>
-<ul class="normal">
-<li class="normal" id="section-6.10-3.1">The Wallet may need to retrieve a new credential from the Issuer
+<ul class="compact">
+<li class="compact" id="section-6.10-3.1">The Wallet may need to retrieve a new credential from the Issuer
 before presenting it to the Verifier. Reasons can include that the
 credential has expired, that the Wallet has removed the credential,
 or that the Wallet needs a new credential to present to the Verifier
@@ -2805,7 +2788,7 @@ in order to avoid correlation. The point in time when such an
 interaction happens may leak information about the Wallet's actions,
 but is usually a weak correlation vector.<a href="#section-6.10-3.1" class="pilcrow">¶</a>
 </li>
-          <li class="normal" id="section-6.10-3.2">The Verifier may need to retrieve a signature verification key,
+          <li class="compact" id="section-6.10-3.2">The Verifier may need to retrieve a signature verification key,
 revocation information or other data from the Issuer before verifying
 the credential. This is not a privacy concern, but may leak
 information about the Wallet's actions.<a href="#section-6.10-3.2" class="pilcrow">¶</a>
@@ -2821,66 +2804,71 @@ example, by caching the data for a random period of time.<a href="#section-6.10-
 </section>
 </div>
 <section id="section-7">
-      <h2 id="name-normative-references">
-<a href="#section-7" class="section-number selfRef">7. </a><a href="#name-normative-references" class="section-name selfRef">Normative References</a>
+      <h2 id="name-references">
+<a href="#section-7" class="section-number selfRef">7. </a><a href="#name-references" class="section-name selfRef">References</a>
       </h2>
+<section id="section-7.1">
+        <h3 id="name-normative-references">
+<a href="#section-7.1" class="section-number selfRef">7.1. </a><a href="#name-normative-references" class="section-name selfRef">Normative References</a>
+        </h3>
 <dl class="references">
 <dt id="OAuth.Responses">[OAuth.Responses]</dt>
-      <dd>
+        <dd>
 <span class="refAuthor">de Medeiros, B.</span>, <span class="refAuthor">Scurtescu, M.</span>, <span class="refAuthor">Tarjan, P.</span>, and <span class="refAuthor">M. Jones</span>, <span class="refTitle">"OAuth 2.0 Multiple Response Type Encoding Practices"</span>, <time datetime="2014-02-25" class="refDate">25 February 2014</time>, <span>&lt;<a href="https://openid.net/specs/oauth-v2-multiple-response-types-1_0.html">https://openid.net/specs/oauth-v2-multiple-response-types-1_0.html</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="OpenID.SIOPv2">[OpenID.SIOPv2]</dt>
-      <dd>
+        <dd>
 <span class="refAuthor">Yasuda, K.</span>, <span class="refAuthor">Jones, M. B.</span>, and <span class="refAuthor">T. Looker</span>, <span class="refTitle">"Self-Issued OpenID Provider V2"</span>, <time datetime="2021-07-20" class="refDate">20 July 2021</time>, <span>&lt;<a href="https://openid.bitbucket.io/connect/openid-connect-self-issued-v2-1_0.html">https://openid.bitbucket.io/connect/openid-connect-self-issued-v2-1_0.html</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="OpenID.VCI">[OpenID.VCI]</dt>
-      <dd>
+        <dd>
 <span class="refAuthor">Lodderstedt, T.</span>, <span class="refAuthor">Yasuda, K.</span>, and <span class="refAuthor">T. Looker</span>, <span class="refTitle">"OpenID for Verifiable Credential Issuance"</span>, <time datetime="2022-06-20" class="refDate">20 June 2022</time>, <span>&lt;<a href="https://openid.net/specs/openid-4-verifiable-credential-issuance-1_0.html">https://openid.net/specs/openid-4-verifiable-credential-issuance-1_0.html</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="OpenID.VP">[OpenID.VP]</dt>
-      <dd>
+        <dd>
 <span class="refAuthor">Terbu, O.</span>, <span class="refAuthor">Lodderstedt, T.</span>, <span class="refAuthor">Yasuda, K.</span>, and <span class="refAuthor">T. Looker</span>, <span class="refTitle">"OpenID for Verifiable Presentations"</span>, <time datetime="2023-04-21" class="refDate">21 April 2023</time>, <span>&lt;<a href="https://openid.net/specs/openid-4-verifiable-presentations-1_0.html">https://openid.net/specs/openid-4-verifiable-presentations-1_0.html</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="RFC6749">[RFC6749]</dt>
-      <dd>
+        <dd>
 <span class="refAuthor">Hardt, D., Ed.</span>, <span class="refTitle">"The OAuth 2.0 Authorization Framework"</span>, <span class="seriesInfo">RFC 6749</span>, <span class="seriesInfo">DOI 10.17487/RFC6749</span>, <time datetime="2012-10" class="refDate">October 2012</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc6749">https://www.rfc-editor.org/info/rfc6749</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="RFC7515">[RFC7515]</dt>
-      <dd>
+        <dd>
 <span class="refAuthor">Jones, M.</span>, <span class="refAuthor">Bradley, J.</span>, and <span class="refAuthor">N. Sakimura</span>, <span class="refTitle">"JSON Web Signature (JWS)"</span>, <span class="seriesInfo">RFC 7515</span>, <span class="seriesInfo">DOI 10.17487/RFC7515</span>, <time datetime="2015-05" class="refDate">May 2015</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc7515">https://www.rfc-editor.org/info/rfc7515</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="RFC7519">[RFC7519]</dt>
-    <dd>
+      <dd>
 <span class="refAuthor">Jones, M.</span>, <span class="refAuthor">Bradley, J.</span>, and <span class="refAuthor">N. Sakimura</span>, <span class="refTitle">"JSON Web Token (JWT)"</span>, <span class="seriesInfo">RFC 7519</span>, <span class="seriesInfo">DOI 10.17487/RFC7519</span>, <time datetime="2015-05" class="refDate">May 2015</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc7519">https://www.rfc-editor.org/info/rfc7519</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 </dl>
 </section>
-<section id="section-8">
-      <h2 id="name-informative-references">
-<a href="#section-8" class="section-number selfRef">8. </a><a href="#name-informative-references" class="section-name selfRef">Informative References</a>
-      </h2>
+<section id="section-7.2">
+        <h3 id="name-informative-references">
+<a href="#section-7.2" class="section-number selfRef">7.2. </a><a href="#name-informative-references" class="section-name selfRef">Informative References</a>
+        </h3>
 <dl class="references">
 <dt id="Hyperledger.Indy">[Hyperledger.Indy]</dt>
-      <dd>
+        <dd>
 <span class="refAuthor">Hyperledger Indy Project</span>, <span class="refTitle">"Hyperledger Indy Project"</span>, <time datetime="2022" class="refDate">2022</time>, <span>&lt;<a href="https://www.hyperledger.org/use/hyperledger-indy">https://www.hyperledger.org/use/hyperledger-indy</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="ISO.18013-5">[ISO.18013-5]</dt>
-      <dd>
+        <dd>
 <span class="refAuthor">ISO/IEC JTC 1/SC 17 Cards and security devices for personal identification</span>, <span class="refTitle">"ISO/IEC 18013-5:2021 Personal identification — ISO-compliant driving licence — Part 5: Mobile driving licence (mDL) application"</span>, <time datetime="2021" class="refDate">2021</time>, <span>&lt;<a href="https://www.iso.org/standard/69084.html">https://www.iso.org/standard/69084.html</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="OpenID.Core">[OpenID.Core]</dt>
-      <dd>
+        <dd>
 <span class="refAuthor">Sakimura, N.</span>, <span class="refAuthor">Bradley, J.</span>, <span class="refAuthor">Jones, M.</span>, <span class="refAuthor">de Medeiros, B.</span>, and <span class="refAuthor">C. Mortimore</span>, <span class="refTitle">"OpenID Connect Core 1.0 incorporating errata set 1"</span>, <time datetime="2014-11-08" class="refDate">8 November 2014</time>, <span>&lt;<a href="http://openid.net/specs/openid-connect-core-1_0.html">http://openid.net/specs/openid-connect-core-1_0.html</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="RFC9207">[RFC9207]</dt>
-      <dd>
+        <dd>
 <span class="refAuthor">Meyer zu Selhausen, K.</span> and <span class="refAuthor">D. Fett</span>, <span class="refTitle">"OAuth 2.0 Authorization Server Issuer Identification"</span>, <span class="seriesInfo">RFC 9207</span>, <span class="seriesInfo">DOI 10.17487/RFC9207</span>, <time datetime="2022-03" class="refDate">March 2022</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc9207">https://www.rfc-editor.org/info/rfc9207</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="VC_DATA">[VC_DATA]</dt>
-    <dd>
+      <dd>
 <span class="refAuthor">Sporny, M.</span>, <span class="refAuthor">Noble, G.</span>, <span class="refAuthor">Longley, D.</span>, <span class="refAuthor">Burnett, D. C.</span>, <span class="refAuthor">Zundel, B.</span>, and <span class="refAuthor">D. Chadwick</span>, <span class="refTitle">"Verifiable Credentials Data Model 1.0"</span>, <time datetime="2019-11-19" class="refDate">19 November 2019</time>, <span>&lt;<a href="https://www.w3.org/TR/vc-data-model">https://www.w3.org/TR/vc-data-model</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 </dl>
+</section>
 </section>
 <div id="authors-addresses">
 <section id="appendix-A">
@@ -2889,7 +2877,7 @@ example, by caching the data for a random period of time.<a href="#section-6.10-
       </h2>
 <address class="vcard">
         <div dir="auto" class="left"><span class="fn nameRole">Daniel Fett</span></div>
-<div dir="auto" class="left"><span class="org">yes.com</span></div>
+<div dir="auto" class="left"><span class="org">Authlete Inc.</span></div>
 <div class="email">
 <span>Email:</span>
 <a href="mailto:mail@danielfett.de" class="email">mail@danielfett.de</a>
@@ -2897,7 +2885,7 @@ example, by caching the data for a random period of time.<a href="#section-6.10-
 </address>
 <address class="vcard">
         <div dir="auto" class="left"><span class="fn nameRole">Torsten Lodderstedt</span></div>
-<div dir="auto" class="left"><span class="org">yes.com</span></div>
+<div dir="auto" class="left"><span class="org">SPRIND</span></div>
 <div class="email">
 <span>Email:</span>
 <a href="mailto:torsten@lodderstedt.net" class="email">torsten@lodderstedt.net</a>
