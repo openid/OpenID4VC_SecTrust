@@ -14,7 +14,7 @@ status = "standard"
 initials="D."
 surname="Fett"
 fullname="Daniel Fett"
-organization="yes.com"
+organization="Authlete Inc."
     [author.address]
     email = "mail@danielfett.de"
 
@@ -23,7 +23,7 @@ organization="yes.com"
 initials="T."
 surname="Lodderstedt"
 fullname="Torsten Lodderstedt"
-organization="yes.com"
+organization="SPRIND"
     [author.address]
     email = "torsten@lodderstedt.net"
 
